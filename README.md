@@ -7,7 +7,7 @@
 
 Una configuración de **Sway** exclusiva para **Ubuntu**. 
 
-*Olvíddate de los temas estáticos.* Este dotfile convierte tu escritorio en un entorno **dinámico**. Extrae la paleta de colores de tu fondo de pantalla y la aplica en tiempo real a los bordes de Sway, Waybar, Kitty, Rofi e Hyprlock usando **Matugen**.
+*Olvídate de los temas estáticos.* Este dotfile convierte tu escritorio en un entorno **dinámico**. Extrae la paleta de colores de tu fondo de pantalla y la aplica en tiempo real a los bordes de Sway, Waybar, Kitty, Rofi e Hyprlock usando **Matugen**.
 
 </div>
 
