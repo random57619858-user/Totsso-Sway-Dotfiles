@@ -2,6 +2,9 @@
 
 # Totsso-Sway-Dotfiles (v1.0)
 
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/13cd11ec-a994-4829-a249-aba24fe100b7" />
+
+
 Una configuración de **Sway** exclusiva para **Ubuntu**. 
 
 *Olvíddate de los temas estáticos.* Este dotfile convierte tu escritorio en un entorno **dinámico**. Extrae la paleta de colores de tu fondo de pantalla y la aplica en tiempo real a los bordes de Sway, Waybar, Kitty, Rofi e Hyprlock usando **Matugen**.
