@@ -262,12 +262,12 @@ deploy() {
     fi
 }
 
-deploy "$DOTFILES_DIR/.config/sway"    "$HOME/.config/sway"    "sway"
-deploy "$DOTFILES_DIR/.config/waybar"  "$HOME/.config/waybar"  "waybar"
-deploy "$DOTFILES_DIR/.config/kitty"   "$HOME/.config/kitty"   "kitty"
-deploy "$DOTFILES_DIR/.config/rofi"    "$HOME/.config/rofi"    "rofi"
-deploy "$DOTFILES_DIR/.config/hypr"    "$HOME/.config/hypr"    "hypr"
-deploy "$DOTFILES_DIR/.config/matugen" "$HOME/.config/matugen" "matugen"
+deploy "$DOTFILES_DIR/sway"    "$HOME/.config/sway"    "sway"
+deploy "$DOTFILES_DIR/waybar"  "$HOME/.config/waybar"  "waybar"
+deploy "$DOTFILES_DIR/kitty"   "$HOME/.config/kitty"   "kitty"
+deploy "$DOTFILES_DIR/rofi"    "$HOME/.config/rofi"    "rofi"
+deploy "$DOTFILES_DIR/hypr"    "$HOME/.config/hypr"    "hypr"
+deploy "$DOTFILES_DIR/matugen" "$HOME/.config/matugen" "matugen"
 
 if [ -d "$DOTFILES_DIR/wallpapers" ]; then
     cp -rf "$DOTFILES_DIR/wallpapers/." "$IMG_DIR/"
