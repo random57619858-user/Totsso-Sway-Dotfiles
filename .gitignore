@@ -1,0 +1,10 @@
+# Matugen generated files
+.config/sway/colors.conf
+.config/waybar/colors.css
+.config/rofi/colors.rasi
+.config/kitty/colors.conf
+.config/hypr/hyprlock-colors.conf
+
+# Backups and cache
+backup/
+.cache/
