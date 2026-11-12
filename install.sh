@@ -223,12 +223,13 @@ if command -v xdg-user-dirs-update >/dev/null 2>&1; then
     xdg-user-dirs-update
 fi
 
-if [ -d "$HOME/Imágenes" ]; then
-    IMG_DIR="$HOME/Imágenes"
-elif [ -d "$HOME/Pictures" ]; then
-    IMG_DIR="$HOME/Pictures"
+if command -v xdg-user-dir >/dev/null 2>&1; then
+    IMG_DIR="$(xdg-user-dir PICTURES)"
 else
     IMG_DIR="$HOME/Pictures"
+fi
+
+if [ ! -d "$IMG_DIR" ] || [ "$IMG_DIR" = "$HOME/Pictures" ]; then
     mkdir -p "$IMG_DIR"
 fi
 
@@ -270,8 +271,11 @@ deploy "$DOTFILES_DIR/hypr"    "$HOME/.config/hypr"    "hypr"
 deploy "$DOTFILES_DIR/matugen" "$HOME/.config/matugen" "matugen"
 
 if [ -d "$DOTFILES_DIR/wallpapers" ]; then
+    mkdir -p "$IMG_DIR"
     cp -rf "$DOTFILES_DIR/wallpapers/." "$IMG_DIR/"
     ok "Wallpapers copied to $IMG_DIR"
+else
+    warn "No wallpapers directory in repo, skipping."
 fi
 
 info "Fixing script permissions..."
