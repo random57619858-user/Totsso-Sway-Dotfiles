@@ -137,14 +137,13 @@ sudo apt install -y \
 
 ok "Base packages installed."
 
-info "Installing JetBrains Mono from official source..."
-TMP_JB="$(mktemp_tracked)"
+info "Installing JetBrainsMono Nerd Font..."
+TMP_NF="$(mktemp_tracked)"
 mkdir -p "$HOME/.local/share/fonts"
-wget -q "https://github.com/JetBrains/JetBrainsMono/releases/download/v2.304/JetBrainsMono-2.304.zip" -O "$TMP_JB/jbmono.zip"
-unzip -q "$TMP_JB/jbmono.zip" -d "$TMP_JB/jbmono"
-cp -r "$TMP_JB/jbmono/fonts/ttf/"* "$HOME/.local/share/fonts/" 2>/dev/null || true
+wget -q "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip" -O "$TMP_NF/JetBrainsMono.zip"
+unzip -q -o "$TMP_NF/JetBrainsMono.zip" -d "$HOME/.local/share/fonts/"
 fc-cache -fv >/dev/null 2>&1 || true
-ok "JetBrains Mono installed."
+ok "JetBrainsMono Nerd Font installed."
 
 info "Installing Rust and Matugen..."
 if ! command -v cargo >/dev/null 2>&1; then
