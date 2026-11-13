@@ -209,7 +209,8 @@ if confirm "Install extra apps via Flatpak (Steam, Discord, VSCodium, OBS Studio
         com.valvesoftware.Steam \
         com.discordapp.Discord \
         com.vscodium.codium \
-        com.obsproject.Studio
+        com.obsproject.Studio \
+        org.onlyoffice.desktopeditors    
     do
         info "Installing $app..."
         flatpak install -y --noninteractive flathub "$app"
