@@ -201,7 +201,7 @@ fi
 info "Installing Flatpak + Flathub (optional)..."
 if confirm "Install Flatpak + Flathub?"; then
     sudo apt install -y flatpak
-    flatpak remote-add --if-not-exists flathub https://flathub.org
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     ok "Flatpak and Flathub configured."
 fi
 
