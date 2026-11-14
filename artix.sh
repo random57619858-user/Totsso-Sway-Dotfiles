@@ -120,12 +120,12 @@ sudo pacman -S --needed --noconfirm \
     sway swaybg waybar kitty rofi \
     playerctl brightnessctl wl-clipboard grim slurp ffmpeg \
     pipewire-openrc wireplumber-openrc pipewire-pulse-openrc \
-    xdg-desktop-portal-wlr xdg-desktop-portal-gtk \
+    xdg-desktop-portal-wlr cava nwg-look xdg-desktop-portal-gtk \
     polkit-kde-agent cliphist \
     xdg-user-dirs git unzip base-devel wget curl \
     wayland wayland-protocols libxkbcommon \
     cairo meson elogind ninja \
-    hyprlock ly
+    hyprlock
 
 ok "Base packages installed."
 
