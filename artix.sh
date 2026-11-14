@@ -123,7 +123,7 @@ sudo pacman -S --needed --noconfirm \
     xdg-desktop-portal-wlr xdg-desktop-portal-gtk \
     polkit-kde-agent cliphist \
     xdg-user-dirs git unzip base-devel wget curl \
-    libwayland wayland-protocols libxkbcommon \
+        wayland wayland-protocols libxkbcommon \
     cairo meson ninja \
     hyprlock
 
