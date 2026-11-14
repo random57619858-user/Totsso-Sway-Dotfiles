@@ -1,24 +1,23 @@
 <div align="center">
 
-# Totsso-Sway-Dotfiles (v1.0)
+# Totsso-Sway-Dotfiles (v1.5)
 
 <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/13cd11ec-a994-4829-a249-aba24fe100b7" />
 
-
-Una configuración de **Sway** exclusiva para **Ubuntu**. 
+Una configuración de **Sway** diseñada para **Ubuntu** y **Artix**. 
 
 *Olvídate de los temas estáticos.* Este dotfile convierte tu escritorio en un entorno **dinámico**. Extrae la paleta de colores de tu fondo de pantalla y la aplica en tiempo real a los bordes de Sway, Waybar, Kitty, Rofi e Hyprlock usando **Matugen**.
 
 </div>
 
-> **Nota sobre el porteo:** Este repositorio es la evolución del proyecto original para Hyprland/Arch. Se ha adaptado todo el ecosistema para funcionar de forma nativa en **Sway sobre Ubuntu**. Se eliminaron las dependencias de Arch y se implementó la compilación local para herramientas que no están en los repositorios oficiales. **No está garantizado que funcione en otras distribuciones**, incluso si son derivadas de Ubuntu.
+> **Nota sobre el porteo:** Este repositorio es la evolución del proyecto original para Hyprland/Arch. Se ha adaptado todo el ecosistema para funcionar de forma nativa en **Sway**, con soporte para dos ramas principales: **Ubuntu** (usando `apt` y compilando herramientas locales) y **Artix** (usando `pacman` y `yay`). Los instaladores están separados para garantizar que cada sistema reciba lo que necesita. **No está garantizado que funcione en otras distribuciones**, incluso si son derivadas.
 
-
+---
 
 ## Instalación
 
 ### Requisitos previos
-- Una instalación limpia de **Ubuntu**.
+- Una instalación limpia de **Ubuntu** o **Artix**.
 - `git` y `sudo` instalados.
 - Conexión a internet.
 
@@ -33,18 +32,25 @@ cd Totsso-Sway-Dotfiles
 
 ### Ejecutar el instalador
 
-El script se encargará de instalar los paquetes oficiales vía `apt`, compilar las herramientas faltantes (como `matugen` con `cargo`), desplegar las configuraciones y crear los respaldos necesarios.
+Dependiendo de tu sistema operativo, el script a ejecutar es distinto. Ambos se encargan de instalar los paquetes, compilar las herramientas faltantes (como `matugen`), desplegar las configuraciones y crear los respaldos necesarios.
 
+**Para Ubuntu:**
 ```bash
-chmod +x install.sh
-./install.sh
+chmod +x ubuntu.sh
+./ubuntu.sh
+```
+
+**Para Artix (OpenRC):**
+```bash
+chmod +x artix.sh
+./artix.sh
 ```
 
 ---
 
 ## ¿Qué instala?
 
-### 🖥️ Entorno Base (Wayland)
+###  Entorno Base (Wayland)
 | Paquete | Función |
 | :--- | :--- |
 | **Sway** | Compositor de ventanas. |
@@ -62,13 +68,14 @@ chmod +x install.sh
 ### Utilidades del Sistema
 | Paquete | Función |
 | :--- | :--- |
-| **GDM3** | Display Manager (gestor de inicio). |
 | **Hyprlock** | Pantalla de bloqueo. |
 | **Cliphist** | Historial del portapapeles. |
 | **Grim + Slurp** | Capturas de pantalla. |
 | **PipeWire + WirePlumber** | Servidor de audio. |
 | **CUPS** | Soporte de impresoras (opcional). |
 | **Flatpak** | Soporte para aplicaciones sandbox (opcional). |
+
+*(Nota: En Artix, el inicio de sesión se gestiona directamente desde la TTY con `dbus-run-session`, y el audio se maneja con los servicios de usuario de OpenRC).*
 
 ---
 
@@ -92,10 +99,10 @@ chmod +x install.sh
 
 ## Respaldos
 
-Antes de tocar cualquier archivo en `~/.config/`, te preguntará si deseas respaldar tu configuración actual en una carpeta `backup/` dentro del repositorio.
+Antes de tocar cualquier archivo en `~/.config/`, los instaladores te preguntarán si deseas respaldar tu configuración actual en una carpeta `backup/` dentro del repositorio.
 
 ---
 
 <div align="center">
-  <i>No es el mejor dotfile del mundo, pero ahora es dinámico, estable en Ubuntu y espero que te guste :)</i>
+  <i>No es el mejor dotfile del mundo, pero ahora es dinámico y espero que te guste :)</i>
 </div>
