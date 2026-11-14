@@ -123,9 +123,9 @@ sudo pacman -S --needed --noconfirm \
     xdg-desktop-portal-wlr xdg-desktop-portal-gtk \
     polkit-kde-agent cliphist \
     xdg-user-dirs git unzip base-devel wget curl \
-        wayland wayland-protocols libxkbcommon \
-    cairo meson ninja \
-    hyprlock
+    wayland wayland-protocols libxkbcommon \
+    cairo meson elogind ninja \
+    hyprlock ly
 
 ok "Base packages installed."
 
@@ -173,29 +173,66 @@ gtk-font-name=Sans 10'
 printf '%s\n' "$GTK_SETTINGS" > "$HOME/.config/gtk-3.0/settings.ini"
 printf '%s\n' "$GTK_SETTINGS" > "$HOME/.config/gtk-4.0/settings.ini"
 
-info "Configuring display manager..."
-if rc-update show default | grep -q "gdm\|sddm\|lightdm"; then
-    warn "Another display manager is already enabled. GDM will not be enabled automatically."
+info "Configuring Sway autostart with D-Bus..."
+PROFILE_FILE="$HOME/.bash_profile"
+[ -f "$PROFILE_FILE" ] || PROFILE_FILE="$HOME/.profile"
+
+if ! grep -q "dbus-run-session sway" "$PROFILE_FILE"; then
+    cat >> "$PROFILE_FILE" << 'EOF'
+
+if [ -z "${WAYLAND_DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
+    exec dbus-run-session sway
+fi
+EOF
+    ok "Sway autostart with D-Bus configured in $PROFILE_FILE"
 else
-    sudo pacman -S --needed --noconfirm gdm-openrc
-    sudo rc-update add gdm default
-    ok "GDM enabled (OpenRC)."
+    ok "Sway autostart already configured."
 fi
 
-info "Enabling PipeWire services (OpenRC User Services)..."
+info "Enabling PipeWire user services (OpenRC)..."
 if ! command -v rc-update >/dev/null 2>&1; then
     warn "OpenRC not found. Skipping user service configuration."
 else
+    mkdir -p "$HOME/.config/rc/init.d"
+    if [ ! -f "$HOME/.config/rc/init.d/pipewire" ]; then
+        cat > "$HOME/.config/rc/init.d/pipewire" << 'EOF'
+#!/usr/bin/openrc-run
+supervisor="supervise-daemon"
+description="Low-latency audio/video router and processor"
+command="/usr/bin/pipewire"
+EOF
+    fi
+    if [ ! -f "$HOME/.config/rc/init.d/pipewire-pulse" ]; then
+        cat > "$HOME/.config/rc/init.d/pipewire-pulse" << 'EOF'
+#!/usr/bin/openrc-run
+supervisor="supervise-daemon"
+description="PipeWire PulseAudio replacement"
+command="/usr/bin/pipewire-pulse"
+depend() { need pipewire; }
+EOF
+    fi
+    if [ ! -f "$HOME/.config/rc/init.d/wireplumber" ]; then
+        cat > "$HOME/.config/rc/init.d/wireplumber" << 'EOF'
+#!/usr/bin/openrc-run
+supervisor="supervise-daemon"
+description="PipeWire session manager"
+command="/usr/bin/wireplumber"
+depend() { need pipewire; after pipewire-pulse; }
+EOF
+    fi
+    chmod +x "$HOME/.config/rc/init.d/"*
+
     rc-update --user add pipewire default 2>/dev/null || rc-update -U add pipewire default
     rc-update --user add pipewire-pulse default 2>/dev/null || rc-update -U add pipewire-pulse default
     rc-update --user add wireplumber default 2>/dev/null || rc-update -U add wireplumber default
-    
-    rc-service --user start pipewire 2>/dev/null || rc-service -U pipewire start
-    rc-service --user start pipewire-pulse 2>/dev/null || rc-service -U pipewire-pulse start
-    rc-service --user start wireplumber 2>/dev/null || rc-service -U wireplumber start
-    
-    ok "PipeWire user services enabled and started."
+
+    ok "PipeWire user services enabled."
 fi
+
+info "Ensuring elogind is enabled..."
+sudo rc-update add elogind boot 2>/dev/null || true
+sudo rc-service elogind start 2>/dev/null || true
+ok "elogind enabled."
 
 info "Setting up printer support (optional)..."
 if confirm "Install printer support (CUPS + network discovery)?"; then
