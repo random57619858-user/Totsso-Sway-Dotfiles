@@ -127,7 +127,7 @@ sudo apt install -y \
     sway swaybg waybar kitty rofi \
     playerctl brightnessctl wl-clipboard grim slurp ffmpeg \
     pipewire wireplumber pipewire-audio \
-    xdg-desktop-portal-wlr xdg-desktop-portal-gtk \
+    xdg-desktop-portal-wlr nwg-look cava xdg-desktop-portal-gtk \
     polkit-kde-agent-1 cliphist \
     xdg-user-dirs git unzip build-essential wget curl \
     fonts-noto-color-emoji \
