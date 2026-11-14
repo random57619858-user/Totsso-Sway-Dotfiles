@@ -28,6 +28,7 @@ bindsym $mod+v floating toggle
 bindsym $mod+Print exec grim -g "$(slurp)" - | wl-copy
 bindsym $mod+w exec $HOME/.config/rofi/wallpaper.sh
 bindsym $mod+l exec hyprlock
+bindsym $mod+a exec cliphist list | rofi -dmenu | cliphist decode | wl-copy
 
 bindsym $mod+1 workspace 1
 bindsym $mod+2 workspace 2
