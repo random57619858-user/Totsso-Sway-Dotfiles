@@ -278,6 +278,18 @@ deploy "$DOTFILES_DIR/kitty"   "$HOME/.config/kitty"   "kitty"
 deploy "$DOTFILES_DIR/rofi"    "$HOME/.config/rofi"    "rofi"
 deploy "$DOTFILES_DIR/hypr"    "$HOME/.config/hypr"    "hypr"
 deploy "$DOTFILES_DIR/matugen" "$HOME/.config/matugen" "matugen"
+deploy "$DOTFILES_DIR/mako"    "$HOME/.config/mako"    "mako"
+
+info "Setting up Rofi Nowplaying..."
+if [ ! -d "$HOME/.config/rofi/nowplaying" ]; then
+    git clone https://github.com/Harsh-bin/rofi-music-control "$HOME/.config/rofi/nowplaying"
+fi
+if [ -f "$DOTFILES_DIR/rofi/nowplaying/nowplaying.rasi" ]; then
+    cp -f "$DOTFILES_DIR/rofi/nowplaying/nowplaying.rasi" "$HOME/.config/rofi/nowplaying/nowplaying.rasi"
+fi
+chmod +x "$HOME/.config/rofi/nowplaying/nowplaying.sh"
+touch "$HOME/.config/rofi/nowplaying/colors.rasi"
+ok "Rofi Nowplaying configured."
 
 if [ -d "$DOTFILES_DIR/wallpapers" ]; then
     mkdir -p "$IMG_DIR"

@@ -1,4 +1,4 @@
- {
+* {
     bg: {{colors.surface_container_lowest.default.hex}};
     bg-alt: {{colors.surface_container.default.hex}};
     fg: {{colors.on_surface.default.hex}};
