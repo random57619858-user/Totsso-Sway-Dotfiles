@@ -129,6 +129,14 @@ sudo pacman -S --needed --noconfirm \
 
 ok "Base packages installed."
 
+info "Configuring Fish shell..."
+if command -v fish >/dev/null 2>&1; then
+    fish -c "set -U fish_greeting"
+    ok "Fish greeting disabled."
+else
+    warn "Fish not found; skipping configuration."
+fi
+
 info "Installing JetBrainsMono Nerd Font..."
 TMP_NF="$(mktemp_tracked)"
 mkdir -p "$HOME/.local/share/fonts"
