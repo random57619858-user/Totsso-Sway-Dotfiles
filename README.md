@@ -1,16 +1,24 @@
 <div align="center">
 
-# Totsso-Sway-Dotfiles (v1.5)
+# Totsso-Sway-Dotfiles (v2.0)
 
 <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/13cd11ec-a994-4829-a249-aba24fe100b7" />
 
-Una configuración de **Sway** diseñada para **Ubuntu** y **Artix**. 
+Una configuración de **Sway** diseñada para **Ubuntu** y **Artix**.
 
-*Olvídate de los temas estáticos.* Este dotfile convierte tu escritorio en un entorno **dinámico**. Extrae la paleta de colores de tu fondo de pantalla y la aplica en tiempo real a los bordes de Sway, Waybar, Kitty, Rofi e Hyprlock usando **Matugen**.
+*Olvídate de los temas estáticos.* Este dotfile convierte tu escritorio en un entorno **dinámico**. Extrae la paleta de colores de tu fondo de pantalla y la aplica en tiempo real a los bordes de Sway, Waybar, Kitty, Rofi, Hyprlock y **Mako** usando **Matugen**.
 
 </div>
 
 > **Nota sobre el porteo:** Este repositorio es la evolución del proyecto original para Hyprland/Arch. Se ha adaptado todo el ecosistema para funcionar de forma nativa en **Sway**, con soporte para dos ramas principales: **Ubuntu** (usando `apt` y compilando herramientas locales) y **Artix** (usando `pacman` y `yay`). Los instaladores están separados para garantizar que cada sistema reciba lo que necesita. **No está garantizado que funcione en otras distribuciones**, incluso si son derivadas.
+
+---
+
+## Novedades en v2.0
+
+- **Notificaciones dinámicas con Mako:** Se reemplazó el sistema de notificaciones por **Mako**, un demonio ligero diseñado específicamente para Wayland y Sway. Ahora las notificaciones heredan la paleta de colores generada por Matugen en tiempo real, incluyendo fondo, texto, borde y barra de progreso.
+- **Integración completa con Matugen:** Se añadió una plantilla personalizada (`mako-colors`) que combina las opciones de diseño de Mako con los roles de color de Material You, aplicando filtros de saturación y luminosidad para evitar paletas apagadas o grises.
+- **Recarga automática:** Cada vez que Matugen regenera la paleta (por ejemplo, al cambiar el wallpaper), Mako recarga su configuración automáticamente mediante `makoctl reload`, sin necesidad de reiniciar el servicio.
 
 ---
 
@@ -50,7 +58,7 @@ chmod +x artix.sh
 
 ## ¿Qué instala?
 
-###  Entorno Base (Wayland)
+### Entorno Base (Wayland)
 | Paquete | Función |
 | :--- | :--- |
 | **Sway** | Compositor de ventanas. |
@@ -64,6 +72,7 @@ chmod +x artix.sh
 | :--- | :--- |
 | **Swaybg** | Gestión de fondos estáticos. |
 | **Matugen** | Generación de paletas Material You (vía `cargo`). |
+| **Mako** | Demonio de notificaciones dinámicas para Wayland. |
 
 ### Utilidades del Sistema
 | Paquete | Función |
@@ -95,7 +104,6 @@ chmod +x artix.sh
 | `SUPER + SHIFT + E` | Menú de energía (Wlogout) |
 | `SUPER + Print` | Captura de pantalla |
 
----
 
 ## Respaldos
 
@@ -104,5 +112,5 @@ Antes de tocar cualquier archivo en `~/.config/`, los instaladores te preguntar�
 ---
 
 <div align="center">
-  <i>No es el mejor dotfile del mundo, pero ahora es dinámico y espero que te guste :)</i>
+  <i>No es el mejor dotfile del mundo, pero ahora es dinámico, notifica con estilo y espero que te guste :)</i>
 </div>
