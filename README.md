@@ -3,6 +3,7 @@
 # Totsso-Sway-Dotfiles (v2.5)
 
 <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/594ade56-03b4-493a-be7d-988067bf6914" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/efd6b77e-5107-4177-825e-206c0be834d6" />
 
 
 Una configuración de **Sway** diseñada para **Ubuntu** y **Artix**.
