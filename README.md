@@ -2,12 +2,13 @@
 
 # Totsso-Sway-Dotfiles
 
-Un dotfile dinamico que se integra con Sway, Waybar, Kitty, Rofi, Hyprlock, Mako y Rofi NowPlaying mediante Matugen.
+Un dotfile dinámico que se integra con Sway, Waybar, Kitty, Rofi, Hyprlock, Mako y Rofi NowPlaying mediante Matugen.
 
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/e332f2b3-1e4e-418e-8497-22d0b9902a50" />
-
+<img width="1366" height="768" alt="Totsso Sway Preview" src="https://github.com/user-attachments/assets/e332f2b3-1e4e-418e-8497-22d0b9902a50" />
 
 </div>
+
+---
 
 ## Novedades
 
@@ -36,6 +37,8 @@ cd Totsso-Sway-Dotfiles
 chmod +x install.sh
 ./install.sh
 ```
+
+---
 
 ## Componentes
 
@@ -95,12 +98,12 @@ chmod +x install.sh
 
 ```text
 Totsso-Sway-Dotfiles/
-├── install.sh 
+├── install.sh
 ├── scripts/
-│   ├── common.sh 
-│   ├── artix.sh 
+│   ├── common.sh
+│   ├── artix.sh
 │   ├── devuan.sh
-│   └── start-services.sh   # Autostart universal de servicios
+│   └── start-services.sh
 ├── sway/
 ├── waybar/
 ├── kitty/
@@ -119,7 +122,8 @@ Antes de modificar cualquier archivo en `~/.config/`, el instalador pregunta si 
 
 Toda la actividad se registra en `install.log`. Si se produce un error, el script indica la línea exacta y sugiere revisar ese archivo para obtener más detalles.
 
+---
 
 <div align="center">
-  <i>No es el mejor dotfile del mundo pero espero que te guste :).</i>
+  <i>No es el mejor dotfile del mundo pero espero que te guste :)</i>
 </div>
