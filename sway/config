@@ -68,5 +68,6 @@ bindsym XF86AudioPrev exec playerctl previous
 exec systemd-run --user --scope --unit=waybar-wayland waybar
 exec wl-paste --type text --watch cliphist store
 exec wl-paste --type image --watch cliphist store
+exec mako
 
 exec sleep 2 && $HOME/.config/rofi/wallpaper.sh restore
