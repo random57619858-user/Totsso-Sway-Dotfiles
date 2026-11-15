@@ -8,28 +8,25 @@ Un dotfile dinámico que se integra con Sway, Waybar, Kitty, Rofi, Hyprlock, Mak
 
 </div>
 
----
+<br>
 
-## Novedades
+> **Rofi NowPlaying** — Reproductor flotante con carátula, título, artista y controles. Se abre con `SUPER + M`.
+>
+> **Modo No Molestar** — Módulo interactivo en Waybar que silencia Mako con un clic, cambiando icono y color según el estado.
+>
+> **Tooltips enriquecidos** — CPU, RAM, MPRIS y Reloj muestran información detallada al pasar el ratón, incluyendo un calendario completo.
+>
+> **Integración Matugen** — Todas las interfaces heredan la paleta Material You generada desde el fondo de pantalla.
 
-| Característica | Descripción |
-| :--- | :--- |
-| **Rofi NowPlaying** | Reproductor flotante con carátula, título, artista y controles. Se abre con `SUPER + M`. |
-| **Modo No Molestar** | Módulo interactivo en Waybar que silencia Mako con un clic, cambiando icono y color según el estado. |
-| **Tooltips enriquecidos** | CPU, RAM, MPRIS y Reloj muestran información detallada al pasar el ratón, incluyendo un calendario completo. |
-| **Integración Matugen** | Todas las interfaces heredan la paleta Material You generada desde el fondo de pantalla. |
-
----
+<br>
 
 ## Instalación
 
-### Requisitos
+**Requisitos**
 
-- Instalación limpia de **Artix** o **Devuan**.
-- `git` y `sudo` instalados.
-- Conexión a internet.
+Instalación limpia de **Artix** o **Devuan**. `git` y `sudo` instalados. Conexión a internet.
 
-### Clonar y ejecutar
+**Clonar y ejecutar**
 
 ```bash
 git clone https://github.com/random57619858-user/Totsso-Sway-Dotfiles
@@ -38,61 +35,55 @@ chmod +x install.sh
 ./install.sh
 ```
 
----
+<br>
 
 ## Componentes
 
-### Entorno base
+**Entorno base**
 
-| Paquete | Función |
-| :--- | :--- |
-| **Sway** | Compositor Wayland. |
-| **Waybar** | Barra de estado con tareas y DND. |
-| **Rofi** | Lanzador, selector de fondos y reproductor. |
-| **Kitty** | Terminal. |
-| **Cava** | Visualizador de audio. |
+- **Sway** — Compositor Wayland.
+- **Waybar** — Barra de estado con tareas y DND.
+- **Rofi** — Lanzador, selector de fondos y reproductor.
+- **Kitty** — Terminal.
+- **Cava** — Visualizador de audio.
 
-### Tematización y fondos
+**Tematización y fondos**
 
-| Paquete | Función |
-| :--- | :--- |
-| **Swaybg** | Gestión de fondos estáticos. |
-| **Matugen** | Paletas Material You vía `cargo`. |
-| **Mako** | Notificaciones dinámicas. |
-| **Rofi NowPlaying** | Reproductor flotante con `playerctl`. |
+- **Swaybg** — Gestión de fondos estáticos.
+- **Matugen** — Paletas Material You vía `cargo`.
+- **Mako** — Notificaciones dinámicas.
+- **Rofi NowPlaying** — Reproductor flotante con `playerctl`.
 
-### Utilidades
+**Utilidades**
 
-| Paquete | Función |
-| :--- | :--- |
-| **Hyprlock** | Pantalla de bloqueo. |
-| **Cliphist** | Historial del portapapeles. |
-| **Grim + Slurp** | Capturas de pantalla. |
-| **PipeWire + WirePlumber** | Servidor de audio. |
-| **CUPS** | Soporte de impresoras (opcional). |
-| **Flatpak** | Aplicaciones aisladas (opcional). |
+- **Hyprlock** — Pantalla de bloqueo.
+- **Cliphist** — Historial del portapapeles.
+- **Grim + Slurp** — Capturas de pantalla.
+- **PipeWire + WirePlumber** — Servidor de audio.
+- **CUPS** — Soporte de impresoras (opcional).
+- **Flatpak** — Aplicaciones aisladas (opcional).
+
+<br>
 
 > En Artix con OpenRC, el audio se gestiona mediante los servicios de usuario de OpenRC. En Artix con otros inits y en Devuan, se utiliza el script `start-services.sh` como autostart de Sway para levantar PipeWire, CUPS y Avahi de forma universal.
 
----
+<br>
 
 ## Atajos principales
 
-| Atajo | Acción |
-| :--- | :--- |
-| `SUPER + Q` | Terminal (Kitty) |
-| `SUPER + D` | Lanzador (Rofi) |
-| `SUPER + M` | Rofi NowPlaying |
-| `SUPER + W` | Selector de fondo |
-| `SUPER + C` | Cerrar ventana activa |
-| `SUPER + V` | Alternar flotante |
-| `SUPER + A` | Historial de portapapeles |
-| `SUPER + L` | Bloquear pantalla |
-| `SUPER + 1-0` | Cambiar workspace |
-| `SUPER + SHIFT + 1-0` | Mover ventana a workspace |
-| `SUPER + Print` | Captura de pantalla |
+- `SUPER + Q` — Terminal (Kitty)
+- `SUPER + D` — Lanzador (Rofi)
+- `SUPER + M` — Rofi NowPlaying
+- `SUPER + W` — Selector de fondo
+- `SUPER + C` — Cerrar ventana activa
+- `SUPER + V` — Alternar flotante
+- `SUPER + A` — Historial de portapapeles
+- `SUPER + L` — Bloquear pantalla
+- `SUPER + 1-0` — Cambiar workspace
+- `SUPER + SHIFT + 1-0` — Mover ventana a workspace
+- `SUPER + Print` — Captura de pantalla
 
----
+<br>
 
 ## Estructura del repositorio
 
@@ -114,7 +105,7 @@ Totsso-Sway-Dotfiles/
 └── wallpapers/
 ```
 
----
+<br>
 
 ## Respaldos y logs
 
@@ -122,7 +113,7 @@ Antes de modificar cualquier archivo en `~/.config/`, el instalador pregunta si 
 
 Toda la actividad se registra en `install.log`. Si se produce un error, el script indica la línea exacta y sugiere revisar ese archivo para obtener más detalles.
 
----
+<br>
 
 <div align="center">
   <i>No es el mejor dotfile del mundo pero espero que te guste :)</i>
