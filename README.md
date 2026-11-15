@@ -2,8 +2,22 @@
 
 # Totsso-Sway-Dotfiles (v2.5)
 
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/594ade56-03b4-493a-be7d-988067bf6914" />
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/efd6b77e-5107-4177-825e-206c0be834d6" />
+Escritorio:
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/10394f3a-4445-487b-b749-da6044a47f58" />
+
+Rofi:
+<img width="670" height="368" alt="image" src="https://github.com/user-attachments/assets/6d07e526-c7be-4ce8-8fd5-3ea866e887bc" />
+
+Waybar:
+<img width="1366" height="50" alt="image" src="https://github.com/user-attachments/assets/00584b19-32e1-42b7-b146-41a24cd08df2" />
+
+Rofi NowPlaying:
+<img width="729" height="419" alt="image" src="https://github.com/user-attachments/assets/ab12becd-d792-47f0-a3b7-9e561f64ef80" />
+
+
+Kitty (Con interprete fish):
+<img width="1341" height="712" alt="image" src="https://github.com/user-attachments/assets/f67053f9-c5a5-4f33-8ce0-fd713b5928f2" />
+
 
 
 Una configuración de **Sway** diseñada para **Ubuntu** y **Artix**.
