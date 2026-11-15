@@ -117,7 +117,7 @@ fi
 
 info "Installing base packages from official repositories..."
 sudo pacman -S --needed --noconfirm \
-    sway swaybg waybar kitty rofi \
+    sway swaybg waybar kitty fish rofi \
     playerctl brightnessctl wl-clipboard grim slurp ffmpeg \
     pipewire-openrc wireplumber-openrc pipewire-pulse-openrc \
     xdg-desktop-portal-wlr cava nwg-look xdg-desktop-portal-gtk \
