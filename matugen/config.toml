@@ -1,26 +1,30 @@
 [config]
 
 [templates.waybar]
-input_path  = '~/.config/matugen/templates/waybar-colors.css.template'
-output_path = '~/.config/waybar/colors.css'
+input_path = "~/.config/matugen/templates/waybar-colors.css.template"
+output_path = "~/.config/waybar/colors.css"
 
 [templates.kitty]
-input_path  = '~/.config/matugen/templates/kitty-colors.conf.template'
-output_path = '~/.config/kitty/colors.conf'
-
-[templates.rofi]
-input_path  = '~/.config/matugen/templates/rofi-colors.rasi.template'
-output_path = '~/.config/rofi/colors.rasi'
+input_path = "~/.config/matugen/templates/kitty-colors.conf.template"
+output_path = "~/.config/kitty/colors.conf"
 
 [templates.sway]
-input_path  = '~/.config/matugen/templates/sway-colors.conf.template'
-output_path = '~/.config/sway/colors.conf'
+input_path = "~/.config/matugen/templates/sway-colors.conf.template"
+output_path = "~/.config/sway/colors.conf"
 
 [templates.hyprlock]
-input_path  = '~/.config/matugen/templates/hyprlock-colors.conf.template'
-output_path = '~/.config/hypr/hyprlock-colors.conf'
+input_path = "~/.config/matugen/templates/hyprlock-colors.conf.template"
+output_path = "~/.config/hypr/hyprlock-colors.conf"
 
 [templates.mako]
-input_path = '~/.config/matugen/templates/mako-colors'
-output_path = '~/.config/mako/config'
-post_hook = 'makoctl reload'
+input_path = "~/.config/matugen/templates/mako-colors"
+output_path = "~/.config/mako/config"
+post_hook = "makoctl reload"
+
+[templates.rofi]
+input_path = "~/.config/matugen/templates/rofi-colors.rasi.template"
+output_path = "~/.config/rofi/colors.rasi"
+
+[templates.rofi-nowplaying]
+input_path = "~/.config/matugen/templates/rofi-colors.rasi"
+output_path = "~/.config/rofi/nowplaying/colors.rasi"
