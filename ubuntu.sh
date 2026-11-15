@@ -124,7 +124,7 @@ ok "Firefox ESR installed from PPA."
 
 info "Installing base packages from official repositories..."
 sudo apt install -y \
-    sway swaybg waybar kitty fish rofi \
+    sway swaybg waybar kitty fish mako rofi \
     playerctl brightnessctl wl-clipboard grim slurp ffmpeg \
     pipewire wireplumber pipewire-audio \
     xdg-desktop-portal-wlr nwg-look cava xdg-desktop-portal-gtk \
