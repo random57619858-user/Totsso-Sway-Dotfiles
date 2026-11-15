@@ -8,18 +8,6 @@ Un dotfile dinámico que se integra con Sway, Waybar, Kitty, Rofi, Hyprlock, Mak
 
 </div>
 
-<br>
-
-> **Rofi NowPlaying** — Reproductor flotante con carátula, título, artista y controles. Se abre con `SUPER + M`.
->
-> **Modo No Molestar** — Módulo interactivo en Waybar que silencia Mako con un clic, cambiando icono y color según el estado.
->
-> **Tooltips enriquecidos** — CPU, RAM, MPRIS y Reloj muestran información detallada al pasar el ratón, incluyendo un calendario completo.
->
-> **Integración Matugen** — Todas las interfaces heredan la paleta Material You generada desde el fondo de pantalla.
-
-<br>
-
 ## Instalación
 
 **Requisitos**
