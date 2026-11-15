@@ -328,14 +328,36 @@ deploy "$DOTFILES_DIR/matugen" "$HOME/.config/matugen" "matugen"
 deploy "$DOTFILES_DIR/mako"    "$HOME/.config/mako"    "mako"
 
 info "Setting up Rofi Nowplaying..."
-if [ ! -d "$HOME/.config/rofi/nowplaying" ]; then
-    git clone https://github.com/Harsh-bin/rofi-music-control "$HOME/.config/rofi/nowplaying"
+NOWPLAYING_DIR="$HOME/.config/rofi/nowplaying"
+
+if [ -d "$NOWPLAYING_DIR" ]; then
+    rm -rf "$NOWPLAYING_DIR"
 fi
+mkdir -p "$NOWPLAYING_DIR"
+
+if git clone https://github.com/Harsh-bin/rofi-music-control "$NOWPLAYING_DIR"; then
+    ok "Repository cloned successfully."
+else
+    fail "Failed to clone rofi-music-control repository."
+    exit 1
+fi
+
 if [ -f "$DOTFILES_DIR/rofi/nowplaying/nowplaying.rasi" ]; then
-    cp -f "$DOTFILES_DIR/rofi/nowplaying/nowplaying.rasi" "$HOME/.config/rofi/nowplaying/nowplaying.rasi"
+    cp -f "$DOTFILES_DIR/rofi/nowplaying/nowplaying.rasi" "$NOWPLAYING_DIR/nowplaying.rasi"
+    ok "Custom nowplaying.rasi applied."
+else
+    warn "Custom nowplaying.rasi not found in dotfiles. Using default from repo."
 fi
-chmod +x "$HOME/.config/rofi/nowplaying/nowplaying.sh"
-touch "$HOME/.config/rofi/nowplaying/colors.rasi"
+
+if [ -f "$NOWPLAYING_DIR/nowplaying.sh" ]; then
+    chmod +x "$NOWPLAYING_DIR/nowplaying.sh"
+    ok "Permissions set for nowplaying.sh."
+else
+    fail "nowplaying.sh not found after cloning. Installation cannot continue."
+    exit 1
+fi
+
+touch "$NOWPLAYING_DIR/colors.rasi"
 ok "Rofi Nowplaying configured."
 
 if [ -d "$DOTFILES_DIR/wallpapers" ]; then
@@ -355,12 +377,16 @@ done
 find "$DOTFILES_DIR" -maxdepth 3 -type f -name "*.sh" -exec chmod +x {} + 2>/dev/null || true
 
 info "Applying Sway Portal Fix..."
-if ! grep -q "dbus-update-activation-environment" "$HOME/.config/sway/config"; then
-    echo 'exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway' >> "$HOME/.config/sway/config"
-    ok "Portal fix applied to Sway config."
+if [ -f "$HOME/.config/sway/config" ]; then
+    if ! grep -q "dbus-update-activation-environment" "$HOME/.config/sway/config"; then
+        echo 'exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway' >> "$HOME/.config/sway/config"
+        ok "Portal fix applied to Sway config."
+    fi
+else
+    warn "Sway config not found. Skipping portal fix."
 fi
 
 echo -e "\n${GREEN}${BOLD}┌──────────────────────────────────────────────────┐"
-echo "│              All done! Reboot when ready :)        │"
+echo "│  All done! Reboot when ready :)        │"
 echo "└──────────────────────────────────────────────────┘${RESET}\n"
 echo -e "${CYAN}Backups saved to: ${BOLD}$BACKUP_ROOT${RESET}\n"
