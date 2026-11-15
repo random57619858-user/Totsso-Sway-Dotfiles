@@ -1,12 +1,13 @@
 <div align="center">
 
-# Totsso-Sway-Dotfiles (v2.0)
+# Totsso-Sway-Dotfiles (v2.5)
 
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/13cd11ec-a994-4829-a249-aba24fe100b7" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/594ade56-03b4-493a-be7d-988067bf6914" />
+
 
 Una configuración de **Sway** diseñada para **Ubuntu** y **Artix**.
 
-*Olvídate de los temas estáticos.* Este dotfile convierte tu escritorio en un entorno **dinámico**. Extrae la paleta de colores de tu fondo de pantalla y la aplica en tiempo real a los bordes de Sway, Waybar, Kitty, Rofi, Hyprlock y **Mako** usando **Matugen**.
+*Olvídate de los temas estáticos.* Este dotfile convierte tu escritorio en un entorno **dinámico**. Extrae la paleta de colores de tu fondo de pantalla y la aplica en tiempo real a los bordes de Sway, Waybar, Kitty, Rofi, Hyprlock, **Mako** y al **Rofi NowPlaying** usando **Matugen**.
 
 </div>
 
@@ -14,11 +15,13 @@ Una configuración de **Sway** diseñada para **Ubuntu** y **Artix**.
 
 ---
 
-## Novedades en v2.0
+## Novedades en v2.5
+- **Mini reproductor con Rofi (`Rofi NowPlaying`):** Se integró un reproductor flotante que se abre con `SUPER + M`. Muestra la carátula del álbum, el título, el artista y los controles de reproducción. Su diseño es cuadrado y oscuro, perfectamente integrado con la estética de la barra.
 
-- **Notificaciones dinámicas con Mako:** Se reemplazó el sistema de notificaciones por **Mako**, un demonio ligero diseñado específicamente para Wayland y Sway. Ahora las notificaciones heredan la paleta de colores generada por Matugen en tiempo real, incluyendo fondo, texto, borde y barra de progreso.
-- **Integración completa con Matugen:** Se añadió una plantilla personalizada (`mako-colors`) que combina las opciones de diseño de Mako con los roles de color de Material You, aplicando filtros de saturación y luminosidad para evitar paletas apagadas o grises.
-- **Recarga automática:** Cada vez que Matugen regenera la paleta (por ejemplo, al cambiar el wallpaper), Mako recarga su configuración automáticamente mediante `makoctl reload`, sin necesidad de reiniciar el servicio.
+- **Modo "No Molestar" (DND) y notificaciones con Mako:** Se añadió un módulo interactivo en Waybar (`custom/dnd`) que permite silenciar las notificaciones de Mako con un solo clic, cambiando su icono y color según el estado.
+
+- **Tooltips enriquecidos:** Los módulos de CPU, RAM, MPRIS y Reloj ahora muestran información detallada al pasar el ratón (frecuencias, uso de memoria, información del álbum y un calendario completo).
+- **Integración total con Matugen:** Todas las nuevas interfaces (Mako y Rofi NowPlaying) heredan la paleta Material You generada a partir del fondo de pantalla, garantizando un entorno cohesivo y dinámico.
 
 ---
 
@@ -62,8 +65,8 @@ chmod +x artix.sh
 | Paquete | Función |
 | :--- | :--- |
 | **Sway** | Compositor de ventanas. |
-| **Waybar** | Barra de estado. |
-| **Rofi** | Lanzador de aplicaciones y selector de wallpapers. |
+| **Waybar** | Barra de estado (con barra de tareas y DND). |
+| **Rofi** | Lanzador de aplicaciones, selector de wallpapers y reproductor. |
 | **Kitty** | Terminal. |
 | **Cava** | Visualizador de audio. |
 
@@ -73,6 +76,7 @@ chmod +x artix.sh
 | **Swaybg** | Gestión de fondos estáticos. |
 | **Matugen** | Generación de paletas Material You (vía `cargo`). |
 | **Mako** | Demonio de notificaciones dinámicas para Wayland. |
+| **Rofi NowPlaying** | Mini reproductor flotante con carátula (vía `playerctl`). |
 
 ### Utilidades del Sistema
 | Paquete | Función |
@@ -94,6 +98,7 @@ chmod +x artix.sh
 | :--- | :--- |
 | `SUPER + Q` | Abrir terminal (Kitty) |
 | `SUPER + D` | Lanzador de aplicaciones (Rofi) |
+| `SUPER + M` | **Mini Reproductor (Rofi NowPlaying)** |
 | `SUPER + W` | **Selector de Wallpaper** |
 | `SUPER + C` | Cerrar ventana activa |
 | `SUPER + V` | Alternar ventana flotante |
@@ -104,6 +109,7 @@ chmod +x artix.sh
 | `SUPER + SHIFT + E` | Menú de energía (Wlogout) |
 | `SUPER + Print` | Captura de pantalla |
 
+---
 
 ## Respaldos
 
@@ -112,5 +118,5 @@ Antes de tocar cualquier archivo en `~/.config/`, los instaladores te preguntar�
 ---
 
 <div align="center">
-  <i>No es el mejor dotfile del mundo, pero ahora es dinámico, notifica con estilo y espero que te guste :)</i>
+  <i>No es el mejor dotfile del mundo, pero ahora es dinámico, tiene un icono para app activa, notificaciones, reproductor integrado y espero que te guste :)</i>
 </div>
