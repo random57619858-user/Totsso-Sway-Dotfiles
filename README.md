@@ -4,17 +4,12 @@
 
 Un dotfile dinamico que se integra con Sway, Waybar, Kitty, Rofi, Hyprlock, Mako y Rofi NowPlaying mediante Matugen.
 
-<br>
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/e332f2b3-1e4e-418e-8497-22d0b9902a50" />
 
-[Artix](https://artixlinux.org/) · [Devuan](https://devuan.org/)
-
-<br>
-
-<img width="100%" alt="Totsso Sway Preview" src="https://github.com/user-attachments/assets/10394f3a-4445-487b-b749-da6044a47f58" />
 
 </div>
 
-## Novedades en v2.5
+## Novedades
 
 | Característica | Descripción |
 | :--- | :--- |
