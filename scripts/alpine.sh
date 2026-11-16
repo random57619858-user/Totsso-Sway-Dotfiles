@@ -36,7 +36,7 @@ sudo apk add \
     pipewire wireplumber \
     xdg-desktop-portal-wlr nwg-look cava xdg-desktop-portal-gtk \
     cliphist \
-    xdg-user-dirs git unzip build-base wget curl \
+    xdg-user-dirs polkit-elogind git unzip build-base wget curl \
     font-noto-emoji \
     wayland-dev wayland-protocols libxkbcommon-dev \
     cairo-dev meson ninja \
