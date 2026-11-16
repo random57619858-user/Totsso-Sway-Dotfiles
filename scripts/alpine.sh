@@ -40,6 +40,10 @@ doas apk add \
     hyprlock
 ok "Base packages installed."
 
+info "Forcing library updates for Wayland desktop..."
+doas apk add --upgrade x265-libs gdk-pixbuf cairo libdrm libinput
+doas apk upgrade --available
+
 info "Enabling D-Bus system service..."
 doas rc-update add dbus default
 doas rc-service dbus start
