@@ -32,7 +32,11 @@ if [ -f /etc/os-release ]; then
 fi
 
 case "$OS_ID" in
-    artix)
+        alpine)
+        ok "Alpine Linux detected."
+        source "$SCRIPTS_DIR/alpine.sh"
+        ;;
+        artix)
         ok "Artix Linux detected."
         source "$SCRIPTS_DIR/artix.sh"
         ;;
