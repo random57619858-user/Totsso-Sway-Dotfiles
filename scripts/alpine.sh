@@ -35,7 +35,7 @@ doas apk add \
     font-noto-emoji \
     wayland-dev wayland-protocols libxkbcommon-dev \
     cairo-dev meson ninja \
-    dbus-openrc seatd \
+    dbus-openrc bash dbus dbus-openrc seatd \
     hyprlock
 ok "Base packages installed."
 
