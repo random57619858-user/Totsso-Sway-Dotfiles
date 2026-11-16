@@ -100,7 +100,7 @@ fi
 
 info "Setting up printer support (optional)..."
 if confirm "Install printer support (CUPS + network discovery)?"; then
-    sudo apk add cups cups-pdf avahi nss-mdns \
+    sudo apk add cups cups-pdf avahi \
         gutenprint system-config-printer
     sudo rc-update add cupsd default
     sudo rc-update add avahi-daemon default
