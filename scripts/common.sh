@@ -27,7 +27,7 @@ banner() {
     echo -e "${RESET}"
     echo -e "${GRAY}   ──────────────────────────────────────────${RESET}"
     echo -e "   ${WHITE}${BOLD} Dotfiles Installer${RESET}"
-    echo -e "   ${DIM}${GRAY}   Artix • Devuan${RESET}"
+    echo -e "   ${DIM}${GRAY}   Artix Linux${RESET}"
     echo -e "${GRAY}   ──────────────────────────────────────────${RESET}\n"
 }
 
@@ -108,32 +108,40 @@ install_nerd_font() {
     info "Downloading JetBrainsMono Nerd Font..."
     local TMP_NF="$(mktemp_tracked)"
     mkdir -p "$HOME/.local/share/fonts"
-    wget -q "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip" -O "$TMP_NF/JetBrainsMono.zip"
-    unzip -q -o "$TMP_NF/JetBrainsMono.zip" -d "$HOME/.local/share/fonts/"
-    fc-cache -fv >/dev/null 2>&1 || true
-    ok "JetBrainsMono Nerd Font installed."
+    
+    if wget -q --show-progress "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip" -O "$TMP_NF/JetBrainsMono.zip"; then
+        if unzip -q -o "$TMP_NF/JetBrainsMono.zip" -d "$HOME/.local/share/fonts/"; then
+            fc-cache -fv >/dev/null 2>&1 || true
+            ok "JetBrainsMono Nerd Font installed."
+        else
+            fail "Failed to unzip the font file. The download might be corrupted."
+        fi
+    else
+        fail "Failed to download the font. Check your internet connection or the URL."
+    fi
 }
 
 install_matugen() {
     step "Installing Matugen"
     if ! command -v cargo >/dev/null 2>&1; then
         info "Installing Rust compiler..."
-        if command -v pacman >/dev/null 2>&1; then
-            sudo pacman -S --needed --noconfirm rust
-        else
-            sudo apt install -y cargo
-        fi
+        sudo pacman -S --needed --noconfirm rust
     fi
+    
     if ! grep -q 'export PATH="$HOME/.cargo/bin:$PATH"' ~/.bashrc; then
         echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
         export PATH="$HOME/.cargo/bin:$PATH"
     fi
+
     if ! command -v matugen >/dev/null 2>&1; then
-        info "Compiling Matugen via Cargo (this may take a while)..."
-        cargo install matugen >/dev/null 2>&1 &
-        spinner $!
-        wait $!
-        ok "Matugen installed."
+        info "Compiling Matugen via Cargo (this WILL take several minutes)..."
+        echo ""
+        if cargo install matugen; then
+            ok "Matugen installed."
+        else
+            fail "Failed to compile Matugen. Check the output above for details."
+            exit 1
+        fi
     else
         ok "Matugen is already installed."
     fi
