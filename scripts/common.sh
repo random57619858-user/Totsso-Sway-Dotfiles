@@ -27,7 +27,7 @@ banner() {
     echo -e "${RESET}"
     echo -e "${GRAY}   ──────────────────────────────────────────${RESET}"
     echo -e "   ${WHITE}${BOLD} Dotfiles Installer${RESET}"
-    echo -e "   ${DIM}${GRAY}   Artix Linux${RESET}"
+    echo -e "   ${DIM}${GRAY}   Artix Linux & Alpine Linux${RESET}"
     echo -e "${GRAY}   ──────────────────────────────────────────${RESET}\n"
 }
 
