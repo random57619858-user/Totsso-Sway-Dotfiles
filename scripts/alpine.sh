@@ -79,18 +79,21 @@ PROFILE_FILE="$HOME/.profile"
 if ! grep -q "exec dbus-run-session sway" "$PROFILE_FILE" 2>/dev/null; then
     cat >> "$PROFILE_FILE" << 'EOF'
 
+# Configuración de entorno para Sway con seatd
 export XDG_SESSION_TYPE=wayland
 export LIBSEAT_BACKEND=seatd
 export XDG_CURRENT_DESKTOP=sway
 
+# Crear XDG_RUNTIME_DIR en /tmp para evitar problemas de permisos
 if [ -z "$XDG_RUNTIME_DIR" ]; then
-    export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+    export XDG_RUNTIME_DIR="/tmp/xdg/$(id -u)-runtime-dir"
     if [ ! -d "$XDG_RUNTIME_DIR" ]; then
         mkdir -p "$XDG_RUNTIME_DIR"
         chmod 0700 "$XDG_RUNTIME_DIR"
     fi
 fi
 
+# Arrancar Sway automáticamente solo en la TTY 1
 if [ "$(tty)" = "/dev/tty1" ]; then
     exec dbus-run-session sway
 fi
