@@ -40,13 +40,18 @@ doas apk add \
     wayland-dev wayland-protocols libxkbcommon-dev \
     cairo-dev meson ninja \
     seatd greetd greetd-tuigreet \
+    eudev xkeyboard-config \
     hyprlock
 ok "Base packages installed."
 
-info "Enabling D-Bus system service..."
+info "Enabling system services (D-Bus, Udev)..."
 doas rc-update add dbus default
 doas rc-service dbus start
-ok "D-Bus enabled."
+
+doas rc-update add udev default
+doas rc-service udev start
+doas rc-service udev-trigger start
+ok "D-Bus and Udev enabled."
 
 info "Configuring Fish shell..."
 if command -v fish >/dev/null 2>&1; then
@@ -70,6 +75,10 @@ gtk-font-name=Sans 10'
 printf '%s\n' "$GTK_SETTINGS" > "$HOME/.config/gtk-3.0/settings.ini"
 printf '%s\n' "$GTK_SETTINGS" > "$HOME/.config/gtk-4.0/settings.ini"
 
+info "Deploying dotfiles BEFORE configuring display manager..."
+
+setup_all_dotfiles
+
 info "Configuring greetd display manager..."
 doas adduser greetd seat 2>/dev/null || true
 doas rc-update add seatd default 2>/dev/null || true
@@ -91,7 +100,7 @@ doas tee /etc/greetd/config.toml > /dev/null << 'EOF'
 vt = 7
 
 [default_session]
-command = "sway-run"
+command = "tuigreet --cmd sway-run"
 user = "greetd"
 EOF
 
@@ -123,8 +132,6 @@ if [ -f "$DOTFILES_DIR/scripts/start-services.sh" ]; then
         echo "exec_always --no-startup-id $HOME/.config/sway/scripts/start-services.sh" >> "$SWAY_CONFIG"
         ok "Universal service autostart added to Sway config."
     fi
-else
-    fail "start-services.sh not found in repo!"
 fi
 
 info "Setting up printer support (optional)..."
@@ -169,5 +176,5 @@ if confirm "Install extra apps via Flatpak (Steam, Discord, VSCodium, OBS Studio
     fi
 fi
 
-setup_all_dotfiles
+
 finish_install
