@@ -75,6 +75,8 @@ doas adduser greetd seat 2>/dev/null || true
 doas rc-update add seatd default 2>/dev/null || true
 doas rc-service seatd start 2>/dev/null || true
 
+doas mkdir -p /etc/greetd
+
 doas tee /etc/greetd/config.toml > /dev/null << 'EOF'
 [terminal]
 vt = 7
