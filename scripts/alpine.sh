@@ -72,36 +72,32 @@ printf '%s\n' "$GTK_SETTINGS" > "$HOME/.config/gtk-4.0/settings.ini"
 
 info "Configuring Sway autostart with seatd..."
 doas adduser "$USER" seat 2>/dev/null || true
+doas rc-update add seatd default 2>/dev/null || true
+doas rc-service seatd start 2>/dev/null || true
 
-doas tee /usr/local/bin/start-sway > /dev/null << 'EOF'
-#!/bin/sh
-if [ ! -d "/run/user/$(id -u)" ]; then
-    mkdir -p "/run/user/$(id -u)"
-    chmod 0700 "/run/user/$(id -u)"
-fi
-export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+PROFILE_FILE="$HOME/.profile"
+if ! grep -q "exec dbus-run-session sway" "$PROFILE_FILE" 2>/dev/null; then
+    cat >> "$PROFILE_FILE" << 'EOF'
+
 export XDG_SESSION_TYPE=wayland
 export LIBSEAT_BACKEND=seatd
 export XDG_CURRENT_DESKTOP=sway
 
-if command -v dbus-run-session >/dev/null 2>&1; then
-    exec dbus-run-session sway
-else
-    if command -v dbus-launch >/dev/null 2>&1; then
-        eval $(dbus-launch --sh-syntax)
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+    export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+    if [ ! -d "$XDG_RUNTIME_DIR" ]; then
+        mkdir -p "$XDG_RUNTIME_DIR"
+        chmod 0700 "$XDG_RUNTIME_DIR"
     fi
-    exec sway
+fi
+
+if [ "$(tty)" = "/dev/tty1" ]; then
+    exec dbus-run-session sway
 fi
 EOF
-doas chmod +x /usr/local/bin/start-sway
-
-if ! grep -q "start-sway" /etc/inittab; then
-    doas cp /etc/inittab /etc/inittab.bak
-    doas sed -i 's|^tty1::respawn:/sbin/getty.*|tty1::respawn:/usr/local/bin/start-sway|' /etc/inittab
-    doas kill -HUP 1
-    ok "System-level Sway autostart configured in /etc/inittab"
+    ok "Sway autostart configured in ~/.profile"
 else
-    ok "System-level Sway autostart already configured."
+    ok "Sway autostart already configured."
 fi
 
 info "Configuring user services for Alpine (OpenRC)..."
