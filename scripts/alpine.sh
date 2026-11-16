@@ -25,19 +25,25 @@ doas apk upgrade -a
 ok "Official edge repositories enabled and system upgraded."
 
 info "Installing base packages from official repositories..."
+# AQUÍ ESTÁ LA CLAVE: dbus y dbus-openrc van en la lista principal
 doas apk add \
     sway swaybg waybar kitty fish rofi-wayland  \
     playerctl brightnessctl mako wl-clipboard grim coreutils slurp ffmpeg \
-    pipewire wireplumber \
+    pipewire wireplumber dbus dbus-openrc \
     xdg-desktop-portal-wlr nwg-look cava xdg-desktop-portal-gtk \
     cliphist \
-    xdg-user-dirs polkit git unzip build-base wget curl \
+    xdg-user-dirs polkit git bash unzip build-base wget curl \
     font-noto-emoji \
     wayland-dev wayland-protocols libxkbcommon-dev \
     cairo-dev meson ninja \
-    dbus-openrc bash dbus dbus-openrc seatd \
+    seatd \
     hyprlock
 ok "Base packages installed."
+
+info "Enabling D-Bus system service..."
+doas rc-update add dbus default
+doas rc-service dbus start
+ok "D-Bus enabled."
 
 info "Configuring Fish shell..."
 if command -v fish >/dev/null 2>&1; then
@@ -74,7 +80,15 @@ export XDG_RUNTIME_DIR="/run/user/$(id -u)"
 export XDG_SESSION_TYPE=wayland
 export LIBSEAT_BACKEND=seatd
 export XDG_CURRENT_DESKTOP=sway
-exec dbus-run-session sway
+
+if command -v dbus-run-session >/dev/null 2>&1; then
+    exec dbus-run-session sway
+else
+    if command -v dbus-launch >/dev/null 2>&1; then
+        eval $(dbus-launch --sh-syntax)
+    fi
+    exec sway
+fi
 EOF
 doas chmod +x /usr/local/bin/start-sway
 
