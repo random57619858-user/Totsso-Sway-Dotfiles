@@ -75,6 +75,8 @@ doas adduser "$USER" seat 2>/dev/null || true
 doas rc-update add seatd default 2>/dev/null || true
 doas rc-service seatd start 2>/dev/null || true
 
+doas rc-service seatd restart 2>/dev/null || true
+
 if [ -f "$DOTFILES_DIR/scripts/sway-run.sh" ]; then
     doas cp "$DOTFILES_DIR/scripts/sway-run.sh" /usr/local/bin/sway-run
     doas chmod +x /usr/local/bin/sway-run
