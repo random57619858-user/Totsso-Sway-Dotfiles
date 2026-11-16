@@ -112,7 +112,7 @@ fi
 info "Installing Flatpak + Flathub (optional)..."
 if confirm "Install Flatpak + Flathub?"; then
     sudo apk add flatpak
-    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
     ok "Flatpak and Flathub configured."
 fi
 
