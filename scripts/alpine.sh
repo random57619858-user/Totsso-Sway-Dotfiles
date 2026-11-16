@@ -67,26 +67,26 @@ printf '%s\n' "$GTK_SETTINGS" > "$HOME/.config/gtk-3.0/settings.ini"
 printf '%s\n' "$GTK_SETTINGS" > "$HOME/.config/gtk-4.0/settings.ini"
 
 info "Configuring Sway autostart with D-Bus..."
-PROFILE_FILE="$HOME/.bash_profile"
-[ -f "$PROFILE_FILE" ] || PROFILE_FILE="$HOME/.profile"
-
-if ! grep -q "exec dbus-run-session sway" "$PROFILE_FILE"; then
-    cat >> "$PROFILE_FILE" << 'EOF'
-
-if [ -z "${WAYLAND_DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
-    if [ ! -d "/run/user/$(id -u)" ]; then
-        mkdir -p "/run/user/$(id -u)"
-        chmod 0700 "/run/user/$(id -u)"
-    fi
-    export XDG_RUNTIME_DIR="/run/user/$(id -u)"
-    exec dbus-run-session sway
+# Creamos un script de arranque a nivel de sistema para asegurar las variables
+sudo tee /usr/local/bin/start-sway > /dev/null << 'EOF'
+#!/bin/sh
+if [ ! -d "/run/user/$(id -u)" ]; then
+    mkdir -p "/run/user/$(id -u)"
+    chmod 0700 "/run/user/$(id -u)"
 fi
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+exec dbus-run-session sway
 EOF
-    ok "Sway autostart with D-Bus configured in $PROFILE_FILE"
-else
-    ok "Sway autostart already configured."
-fi
+sudo chmod +x /usr/local/bin/start-sway
 
+if ! grep -q "start-sway" /etc/inittab; then
+    sudo cp /etc/inittab /etc/inittab.bak
+    sudo sed -i 's|^tty1::respawn:/sbin/getty.*|tty1::respawn:/usr/local/bin/start-sway|' /etc/inittab
+    sudo kill -HUP 1
+    ok "System-level Sway autostart configured in /etc/inittab"
+else
+    ok "System-level Sway autostart already configured."
+fi
 
 info "Configuring user services for Alpine (OpenRC)..."
 mkdir -p "$HOME/.config/sway/scripts"
