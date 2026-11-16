@@ -36,23 +36,9 @@ case "$OS_ID" in
         ok "Artix Linux detected."
         source "$SCRIPTS_DIR/artix.sh"
         ;;
-    devuan)
-        ok "Devuan detected."
-        source "$SCRIPTS_DIR/devuan.sh"
-        ;;
-    debian)
-        ok "Debian detected."
-        warn "Debian is supported via the Devuan installer. Some packages may differ."
-        source "$SCRIPTS_DIR/devuan.sh"
-        ;;
     *)
-        warn "Detected system: ${PRETTY_NAME:-$OS_ID}"
-        warn "This script is intended for Artix Linux or Devuan."
-        if confirm "Are you sure you want to continue anyway?"; then
-            source "$SCRIPTS_DIR/devuan.sh"
-        else
-            fail "Installation cancelled by user."
-            exit 1
-        fi
+        fail "Detected system: ${PRETTY_NAME:-$OS_ID}"
+        fail "This script is intended for Artix Linux only."
+        exit 1
         ;;
 esac
