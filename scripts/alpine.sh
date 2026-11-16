@@ -12,19 +12,17 @@ if ! doas true; then
     exit 1
 fi
 
-info "Migrating to edge repositories..."
-if ! grep -q "edge/testing" /etc/apk/repositories; then
-    doas sed -i 's|v[0-9.]*/main|edge/main|g; s|v[0-9.]*/community|edge/community|g' /etc/apk/repositories
-    
-    if ! grep -q "edge/testing" /etc/apk/repositories; then
-        echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" | doas tee -a /etc/apk/repositories
-    fi
-    
-    doas apk update
-    doas apk upgrade
-fi
-ok "Edge repositories enabled and system upgraded."
+info "Migrating to official edge repositories..."
+doas sed -i 's|https://[^/]*/alpine|https://dl-cdn.alpinelinux.org/alpine|g' /etc/apk/repositories
+doas sed -i 's|v[0-9.]*/main|edge/main|g; s|v[0-9.]*/community|edge/community|g' /etc/apk/repositories
 
+if ! grep -q "edge/testing" /etc/apk/repositories; then
+    echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" | doas tee -a /etc/apk/repositories
+fi
+
+doas apk update
+doas apk upgrade -a
+ok "Official edge repositories enabled and system upgraded."
 
 info "Installing base packages from official repositories..."
 doas apk add \
