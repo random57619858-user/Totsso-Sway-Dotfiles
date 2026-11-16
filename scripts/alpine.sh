@@ -111,18 +111,14 @@ fi
 
 info "Installing Flatpak + Flathub (optional)..."
 if confirm "Install Flatpak + Flathub?"; then
-    sudo apk add flatpak gnupg wget
+    sudo apk add flatpak gnupg wget ca-certificates
     flatpak remote-delete flathub --user 2>/dev/null || true
     rm -rf ~/.local/share/flatpak/repo
-    
-    if wget -q https://dl.flathub.org/repo/flathub.gpg -O /tmp/flathub.gpg; then
-        if flatpak remote-add --user --if-not-exists --gpg-import=/tmp/flathub.gpg flathub https://dl.flathub.org/repo/flathub.flatpakrepo; then
-            ok "Flatpak and Flathub configured."
-        else
-            fail "Failed to configure Flathub."
-        fi
+    wget -q https://flathub.org/repo/flathub.gpg -O /tmp/flathub.gpg
+    if flatpak remote-add --user --if-not-exists --gpg-import=/tmp/flathub.gpg flathub https://dl.flathub.org/repo/flathub.flatpakrepo; then
+        ok "Flatpak and Flathub configured."
     else
-        fail "Failed to download Flathub GPG key."
+        fail "Failed to configure Flathub. Check your network connection."
     fi
 fi
 
