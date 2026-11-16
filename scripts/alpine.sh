@@ -1,46 +1,46 @@
-#Version beta de soporte para Alpine linux: 
-
 #!/usr/bin/env bash
 
-if ! command -v sudo >/dev/null 2>&1; then
-    fail "sudo is required but not installed. Aborting."
+if ! command -v doas >/dev/null 2>&1; then
+    fail "doas is required but not installed. Aborting."
     exit 1
 fi
 
-if ! sudo -v; then
-    fail "sudo is required. Aborting."
+sudo() { doas "$@"; }
+
+if ! doas true; then
+    fail "doas is required. Aborting."
     exit 1
 fi
 
 info "Enabling edge/testing and edge/community repositories..."
 if ! grep -q "edge/testing" /etc/apk/repositories; then
-    sudo sed -i '/^#.*edge\/community/s/^#//' /etc/apk/repositories
-    sudo sed -i '/^#.*edge\/testing/s/^#//' /etc/apk/repositories
+    doas sed -i '/^#.*edge\/community/s/^#//' /etc/apk/repositories
+    doas sed -i '/^#.*edge\/testing/s/^#//' /etc/apk/repositories
     if ! grep -q "edge/community" /etc/apk/repositories; then
-        echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" | sudo tee -a /etc/apk/repositories
+        echo "https://dl-cdn.alpinelinux.org/alpine/edge/community" | doas tee -a /etc/apk/repositories
     fi
     if ! grep -q "edge/testing" /etc/apk/repositories; then
-        echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" | sudo tee -a /etc/apk/repositories
+        echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" | doas tee -a /etc/apk/repositories
     fi
-    sudo apk update
+    doas apk update
 fi
 ok "Edge repositories enabled."
 
 info "Updating system..."
-sudo apk upgrade
+doas apk upgrade
 
 info "Installing base packages from official repositories..."
-sudo apk add \
+doas apk add \
     sway swaybg waybar kitty fish rofi-wayland  \
     playerctl brightnessctl mako wl-clipboard grim coreutils slurp ffmpeg \
     pipewire wireplumber \
     xdg-desktop-portal-wlr nwg-look cava xdg-desktop-portal-gtk \
     cliphist \
-    xdg-user-dirs git unzip build-base wget curl \
+    xdg-user-dirs polkit git unzip build-base wget curl \
     font-noto-emoji \
     wayland-dev wayland-protocols libxkbcommon-dev \
     cairo-dev meson ninja \
-    dbus-openrc seatd polkit \
+    dbus-openrc seatd \
     hyprlock
 ok "Base packages installed."
 
@@ -66,23 +66,27 @@ gtk-font-name=Sans 10'
 printf '%s\n' "$GTK_SETTINGS" > "$HOME/.config/gtk-3.0/settings.ini"
 printf '%s\n' "$GTK_SETTINGS" > "$HOME/.config/gtk-4.0/settings.ini"
 
-info "Configuring Sway autostart with D-Bus..."
-# Creamos un script de arranque a nivel de sistema para asegurar las variables
-sudo tee /usr/local/bin/start-sway > /dev/null << 'EOF'
+info "Configuring Sway autostart with seatd..."
+doas adduser "$USER" seat 2>/dev/null || true
+
+doas tee /usr/local/bin/start-sway > /dev/null << 'EOF'
 #!/bin/sh
 if [ ! -d "/run/user/$(id -u)" ]; then
     mkdir -p "/run/user/$(id -u)"
     chmod 0700 "/run/user/$(id -u)"
 fi
 export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+export XDG_SESSION_TYPE=wayland
+export LIBSEAT_BACKEND=seatd
+export XDG_CURRENT_DESKTOP=sway
 exec dbus-run-session sway
 EOF
-sudo chmod +x /usr/local/bin/start-sway
+doas chmod +x /usr/local/bin/start-sway
 
 if ! grep -q "start-sway" /etc/inittab; then
-    sudo cp /etc/inittab /etc/inittab.bak
-    sudo sed -i 's|^tty1::respawn:/sbin/getty.*|tty1::respawn:/usr/local/bin/start-sway|' /etc/inittab
-    sudo kill -HUP 1
+    doas cp /etc/inittab /etc/inittab.bak
+    doas sed -i 's|^tty1::respawn:/sbin/getty.*|tty1::respawn:/usr/local/bin/start-sway|' /etc/inittab
+    doas kill -HUP 1
     ok "System-level Sway autostart configured in /etc/inittab"
 else
     ok "System-level Sway autostart already configured."
@@ -106,40 +110,44 @@ fi
 
 info "Setting up printer support (optional)..."
 if confirm "Install printer support (CUPS + network discovery)?"; then
-    sudo apk add cups cups-pdf avahi \
+    doas apk add cups cups-pdf avahi \
         gutenprint system-config-printer
-    sudo rc-update add cupsd default
-    sudo rc-update add avahi-daemon default
-    sudo rc-service cupsd start
-    sudo rc-service avahi-daemon start
+    doas rc-update add cupsd default
+    doas rc-update add avahi-daemon default
+    doas rc-service cupsd start
+    doas rc-service avahi-daemon start
     ok "Printer support ready."
 fi
 
 info "Installing Flatpak + Flathub (optional)..."
 if confirm "Install Flatpak + Flathub?"; then
-    sudo apk add flatpak gnupg
+    doas apk add flatpak gnupg wget ca-certificates
     flatpak remote-delete flathub --user 2>/dev/null || true
     rm -rf ~/.local/share/flatpak/repo
     if flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo; then
         ok "Flatpak and Flathub configured."
     else
-        fail "Failed to configure Flathub. Check your network connection."
-        exit 1
+        warn "Alpine's Flatpak is known to be unstable with GPG verification."
+        warn "Continuing installation without Flatpak."
     fi
 fi
 
 if confirm "Install extra apps via Flatpak (Steam, Discord, VSCodium, OBS Studio)?"; then
-    for app in \
-        com.valvesoftware.Steam \
-        com.discordapp.Discord \
-        com.vscodium.codium \
-        com.obsproject.Studio \
-        org.onlyoffice.desktopeditors    
-    do
-        info "Installing $app..."
-        flatpak install -y --noninteractive flathub "$app"
-    done
-    ok "Extra apps installed via Flatpak."
+    if flatpak remotes --user | grep -q "flathub"; then
+        for app in \
+            com.valvesoftware.Steam \
+            com.discordapp.Discord \
+            com.vscodium.codium \
+            com.obsproject.Studio \
+            org.onlyoffice.desktopeditors    
+        do
+            info "Installing $app..."
+            flatpak install -y --noninteractive flathub "$app"
+        done
+        ok "Extra apps installed via Flatpak."
+    else
+        warn "Flathub is not configured. Skipping Flatpak apps installation."
+    fi
 fi
 
 setup_all_dotfiles
