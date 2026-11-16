@@ -158,7 +158,7 @@ install_icons() {
     step "Installing Icons"
     local TMP_ICONS="$(mktemp_tracked)"
     info "Cloning Fluent Icon Theme..."
-    if git clone --depth=1 https://github.com/vinceliuice/Fluent-icon-theme.git "$TMP_ICONS/Fluent-icon-theme" >/dev/null 2>&1; then
+    if git clone --depth=1 https://github.com/vinceliuice/Fluent-icon-theme "$TMP_ICONS/Fluent-icon-theme" >/dev/null 2>&1; then
         info "Applying icons..."
         ( cd "$TMP_ICONS/Fluent-icon-theme" && chmod +x install.sh && ./install.sh -d "$HOME/.local/share/icons" >/dev/null 2>&1 )
         ok "Fluent icons installed."
