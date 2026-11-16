@@ -39,7 +39,7 @@ doas apk add \
     font-noto-emoji \
     wayland-dev wayland-protocols libxkbcommon-dev \
     cairo-dev meson ninja \
-    seatd \
+    seatd greetd greetd-tuigreet \
     hyprlock
 ok "Base packages installed."
 
@@ -70,34 +70,35 @@ gtk-font-name=Sans 10'
 printf '%s\n' "$GTK_SETTINGS" > "$HOME/.config/gtk-3.0/settings.ini"
 printf '%s\n' "$GTK_SETTINGS" > "$HOME/.config/gtk-4.0/settings.ini"
 
-info "Configuring Sway autostart with seatd..."
-doas adduser "$USER" seat 2>/dev/null || true
+info "Configuring greetd display manager..."
+doas adduser greetd seat 2>/dev/null || true
 doas rc-update add seatd default 2>/dev/null || true
 doas rc-service seatd start 2>/dev/null || true
 
-if [ -f "$DOTFILES_DIR/scripts/sway-run.sh" ]; then
-    doas cp "$DOTFILES_DIR/scripts/sway-run.sh" /usr/local/bin/sway-run
-    doas chmod +x /usr/local/bin/sway-run
-    ok "sway-run wrapper installed."
-else
-    fail "scripts/sway-run.sh not found in repo!"
-    exit 1
-fi
+doas tee /etc/greetd/config.toml > /dev/null << 'EOF'
+[terminal]
+vt = 7
 
-PROFILE_FILE="$HOME/.profile"
-if ! grep -q "exec /usr/local/bin/sway-run" "$PROFILE_FILE" 2>/dev/null; then
-    cat >> "$PROFILE_FILE" << 'EOF'
-
-if [ "$(tty)" = "/dev/tty1" ]; then
-    if ! id -nG | grep -qw seat; then
-        exec newgrp seat -c "exec /usr/local/bin/sway-run"
-    fi
-    exec /usr/local/bin/sway-run
-fi
+[default_session]
+command = "tuigreet --cmd sway"
+user = "greetd"
 EOF
-    ok "Sway autostart configured in ~/.profile"
-else
-    ok "Sway autostart already configured."
+
+doas tee /etc/conf.d/greetd > /dev/null << 'EOF'
+rc_need=seatd
+EOF
+
+doas rc-update add greetd default
+doas rc-service greetd start
+ok "greetd display manager configured."
+
+info "Cleaning up old .profile autostart entries..."
+PROFILE_FILE="$HOME/.profile"
+if [ -f "$PROFILE_FILE" ]; then
+    doas sed -i '/exec \/usr\/local\/bin\/sway-run/d' "$PROFILE_FILE"
+    doas sed -i '/exec dbus-run-session sway/d' "$PROFILE_FILE"
+    doas sed -i '/exec sway/d' "$PROFILE_FILE"
+    ok "Old autostart entries removed from .profile."
 fi
 
 info "Configuring user services for Alpine (OpenRC)..."
