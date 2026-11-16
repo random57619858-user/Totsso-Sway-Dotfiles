@@ -75,25 +75,22 @@ doas adduser "$USER" seat 2>/dev/null || true
 doas rc-update add seatd default 2>/dev/null || true
 doas rc-service seatd start 2>/dev/null || true
 
-PROFILE_FILE="$HOME/.profile"
-if ! grep -q "exec dbus-run-session sway" "$PROFILE_FILE" 2>/dev/null; then
-    cat >> "$PROFILE_FILE" << 'EOF'
-
-export XDG_SESSION_TYPE=wayland
-export LIBSEAT_BACKEND=seatd
-export XDG_CURRENT_DESKTOP=sway
-export XDG_VTNR=$(basename "$(tty)" | sed 's/tty//')
-
-if [ -z "$XDG_RUNTIME_DIR" ]; then
-    export XDG_RUNTIME_DIR="/tmp/xdg/$(id -u)-runtime-dir"
-    if [ ! -d "$XDG_RUNTIME_DIR" ]; then
-        mkdir -p "$XDG_RUNTIME_DIR"
-        chmod 0700 "$XDG_RUNTIME_DIR"
-    fi
+if [ -f "$DOTFILES_DIR/scripts/sway-run" ]; then
+    doas cp "$DOTFILES_DIR/scripts/sway-run" /usr/local/bin/sway-run
+    doas chmod +x /usr/local/bin/sway-run
+    ok "sway-run wrapper installed."
+else
+    fail "scripts/sway-run not found in repo!"
+    exit 1
 fi
 
-if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
-    exec dbus-run-session sway
+# Añadimos la llamada al .profile
+PROFILE_FILE="$HOME/.profile"
+if ! grep -q "sway-run" "$PROFILE_FILE" 2>/dev/null; then
+    cat >> "$PROFILE_FILE" << 'EOF'
+
+if [ "$(tty)" = "/dev/tty1" ]; then
+    exec /usr/local/bin/sway-run
 fi
 EOF
     ok "Sway autostart configured in ~/.profile"
