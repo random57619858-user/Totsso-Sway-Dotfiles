@@ -24,8 +24,11 @@ doas apk update
 doas apk upgrade -a
 ok "Official edge repositories enabled and system upgraded."
 
+info "Forcing library updates for Wayland desktop..."
+doas apk add --upgrade x265-libs gdk-pixbuf cairo libdrm libinput
+doas apk upgrade --available
+
 info "Installing base packages from official repositories..."
-# AQUÍ ESTÁ LA CLAVE: dbus y dbus-openrc van en la lista principal
 doas apk add \
     sway swaybg waybar kitty fish rofi-wayland  \
     playerctl brightnessctl mako wl-clipboard grim coreutils slurp ffmpeg \
@@ -39,10 +42,6 @@ doas apk add \
     seatd \
     hyprlock
 ok "Base packages installed."
-
-info "Forcing library updates for Wayland desktop..."
-doas apk add --upgrade x265-libs gdk-pixbuf cairo libdrm libinput
-doas apk upgrade --available
 
 info "Enabling D-Bus system service..."
 doas rc-update add dbus default
