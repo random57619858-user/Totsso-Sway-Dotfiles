@@ -75,16 +75,15 @@ doas adduser "$USER" seat 2>/dev/null || true
 doas rc-update add seatd default 2>/dev/null || true
 doas rc-service seatd start 2>/dev/null || true
 
-if [ -f "$DOTFILES_DIR/scripts/sway-run" ]; then
-    doas cp "$DOTFILES_DIR/scripts/sway-run" /usr/local/bin/sway-run
+if [ -f "$DOTFILES_DIR/scripts/sway-run.sh" ]; then
+    doas cp "$DOTFILES_DIR/scripts/sway-run.sh" /usr/local/bin/sway-run
     doas chmod +x /usr/local/bin/sway-run
     ok "sway-run wrapper installed."
 else
-    fail "scripts/sway-run not found in repo!"
+    fail "scripts/sway-run.sh not found in repo!"
     exit 1
 fi
 
-# Añadimos la llamada al .profile
 PROFILE_FILE="$HOME/.profile"
 if ! grep -q "sway-run" "$PROFILE_FILE" 2>/dev/null; then
     cat >> "$PROFILE_FILE" << 'EOF'
