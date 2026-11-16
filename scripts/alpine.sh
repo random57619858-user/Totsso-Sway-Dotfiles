@@ -25,7 +25,7 @@ doas apk upgrade -a
 ok "Official edge repositories enabled and system upgraded."
 
 info "Forcing library updates for Wayland desktop..."
-doas apk add --upgrade x265-libs gdk-pixbuf cairo libdrm libinput
+doas apk add --upgrade x265-libs gdk-pixbuf libinput-libs cairo libdrm
 doas apk upgrade --available
 
 info "Installing base packages from official repositories..."
