@@ -70,10 +70,15 @@ info "Configuring Sway autostart with D-Bus..."
 PROFILE_FILE="$HOME/.bash_profile"
 [ -f "$PROFILE_FILE" ] || PROFILE_FILE="$HOME/.profile"
 
-if ! grep -q "dbus-run-session sway" "$PROFILE_FILE"; then
+if ! grep -q "exec dbus-run-session sway" "$PROFILE_FILE"; then
     cat >> "$PROFILE_FILE" << 'EOF'
 
 if [ -z "${WAYLAND_DISPLAY}" ] && [ "${XDG_VTNR}" -eq 1 ]; then
+    if [ ! -d "/run/user/$(id -u)" ]; then
+        mkdir -p "/run/user/$(id -u)"
+        chmod 0700 "/run/user/$(id -u)"
+    fi
+    export XDG_RUNTIME_DIR="/run/user/$(id -u)"
     exec dbus-run-session sway
 fi
 EOF
@@ -81,6 +86,7 @@ EOF
 else
     ok "Sway autostart already configured."
 fi
+
 
 info "Configuring user services for Alpine (OpenRC)..."
 mkdir -p "$HOME/.config/sway/scripts"
