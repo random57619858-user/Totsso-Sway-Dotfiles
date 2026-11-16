@@ -125,7 +125,14 @@ install_matugen() {
     step "Installing Matugen"
     if ! command -v cargo >/dev/null 2>&1; then
         info "Installing Rust compiler..."
-        sudo pacman -S --needed --noconfirm rust
+        if command -v pacman >/dev/null 2>&1; then
+            sudo pacman -S --needed --noconfirm rust
+        elif command -v apk >/dev/null 2>&1; then
+            sudo apk add rust cargo
+        else
+            fail "Unknown package manager. Cannot install Rust."
+            exit 1
+        fi
     fi
     
     if ! grep -q 'export PATH="$HOME/.cargo/bin:$PATH"' ~/.bashrc; then
