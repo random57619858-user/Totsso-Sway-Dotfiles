@@ -62,7 +62,7 @@ apply_matugen() {
 if [ "${1:-}" = "restore" ]; then
     sleep 0.5
     [ -f "$CACHE_FILE" ] || exit 0
-    saved=$(cat "$CACHE_FILE")
+     saved=$(cat "$CACHE_FILE")
     [ -f "$saved" ] || exit 0
     apply_wallpaper "$saved"
     apply_matugen "$saved"
@@ -79,9 +79,19 @@ IMAGE_DIR=$(detect_image_dir)
 TEMP_LIST=$(mktemp)
 trap 'rm -f "$TEMP_LIST"' EXIT
 
-find "$IMAGE_DIR" -maxdepth 3 -type f \( \
-    -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.webp" \
-\) -printf "%P|%p\n" 2>/dev/null | sort > "$TEMP_LIST"
+if find --version 2>/dev/null | grep -q "GNU"; then
+    find "$IMAGE_DIR" -maxdepth 3 -type f \( \
+        -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.webp" \
+    \) -printf "%P|%p\n" 2>/dev/null | sort > "$TEMP_LIST"
+else
+    find "$IMAGE_DIR" -maxdepth 3 -type f \( \
+        -iname "*.png" -o -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.webp" \
+    \) 2>/dev/null | while read -r full_path; do
+        [ -z "$full_path" ] && continue
+        rel_path="${full_path#$IMAGE_DIR/}"
+        echo "$rel_path|$full_path"
+    done | sort > "$TEMP_LIST"
+fi
 
 if [ ! -s "$TEMP_LIST" ]; then
     notify-send "Wallpaper" "No images found in $IMAGE_DIR"
