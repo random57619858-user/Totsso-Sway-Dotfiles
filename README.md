@@ -2,7 +2,7 @@
 
 # Totsso-Sway-Dotfiles
 
-Un dotfile dinámico que se integra con Sway, Waybar, Kitty, Rofi, Hyprlock, Mako y Rofi NowPlaying mediante Matugen.
+Un dotfile dinámico para **Artix Linux** y **Alpine Linux** que se integra con Sway, Waybar, Kitty, Rofi, Hyprlock, Mako y Rofi NowPlaying mediante Matugen.
 
 <img width="1366" height="768" alt="Totsso Sway Preview" src="https://github.com/user-attachments/assets/e332f2b3-1e4e-418e-8497-22d0b9902a50" />
 
@@ -13,6 +13,8 @@ Un dotfile dinámico que se integra con Sway, Waybar, Kitty, Rofi, Hyprlock, Mak
 ---
 
 ## Novedades
+
+**Soporte oficial para Alpine Linux** — Detección automática de distribución, migración a repositorios `edge`, gestión nativa con OpenRC, `seatd` y `greetd` + `tuigreet`.
 
 **Rofi NowPlaying** — Reproductor flotante con carátula, título, artista y controles. Se abre con `SUPER + M`.
 
@@ -28,8 +30,8 @@ Un dotfile dinámico que se integra con Sway, Waybar, Kitty, Rofi, Hyprlock, Mak
 
 ### Requisitos
 
-- Instalación limpia de **Artix**.
-- `git` y `sudo` instalados.
+- Instalación limpia de **Artix Linux** o **Alpine Linux**.
+- git, unzip, curl, git wget y gestor de privilegios (`sudo` en Artix / `doas` en Alpine, posiblemente en este tengas que instalas bash).
 - Conexión a internet.
 
 ### Clonar y ejecutar
@@ -40,6 +42,8 @@ cd Totsso-Sway-Dotfiles
 chmod +x install.sh
 ./install.sh
 ```
+
+> El instalador detecta automáticamente si estás en **Artix** o **Alpine** y ejecuta el módulo correspondiente.
 
 ---
 
@@ -65,11 +69,11 @@ chmod +x install.sh
 - **Hyprlock** — Pantalla de bloqueo.
 - **Cliphist** — Historial del portapapeles.
 - **Grim + Slurp** — Capturas de pantalla.
-- **PipeWire + WirePlumber** — Servidor de audio.
-- **CUPS** — Soporte de impresoras (opcional).
-- **Flatpak** — Aplicaciones aisladas (opcional).
+- **PipeWire + WirePlumber** — Servidor de audio con compatibilidad PulseAudio (`pipewire-pulse`).
+- **CUPS + Avahi** — Soporte de impresoras con descubrimiento automático `.local` (opcional).
+- **Flatpak** — Aplicaciones aisladas desde Flathub (opcional).
 
-> En Artix, el audio se gestiona con los servicios de usuario de OpenRC. En inits alternativos, se usa `start-services.sh` como autostart de Sway para levantar PipeWire, CUPS y Avahi.
+> **Gestión de servicios:** En Artix (OpenRC) el audio se inicia mediante servicios de usuario; en otros inits o en Alpine Linux se emplea `start-services.sh` en el autostart de Sway para levantar la cadena de PipeWire (`pipewire`, `pipewire-pulse` y `wireplumber`), mientras que `dbus`, `seatd`, `greetd`, `cupsd` y `avahi-daemon` corren como servicios de sistema en OpenRC.
 
 ---
 
@@ -97,6 +101,8 @@ Totsso-Sway-Dotfiles/
 ├── scripts/
 │   ├── common.sh
 │   ├── artix.sh
+│   ├── alpine.sh
+│   ├── sway-run.sh
 │   └── start-services.sh
 ├── sway/
 ├── waybar/
