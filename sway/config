@@ -25,7 +25,7 @@ bindsym $mod+q exec $term
 bindsym $mod+d exec $menu
 bindsym $mod+c kill
 bindsym $mod+v floating toggle
-bindsym $mod+Print exec grim -g "$(slurp)" - | wl-copy
+bindsym $mod+Print exec sh -c 'grim -g "$(slurp)" -t png - | wl-copy --type image/png'
 bindsym $mod+w exec $HOME/.config/rofi/wallpaper.sh
 bindsym $mod+l exec hyprlock
 bindsym $mod+a exec cliphist list | rofi -dmenu | cliphist decode | wl-copy
