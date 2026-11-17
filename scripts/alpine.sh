@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/init/env bash
 
 if ! command -v doas >/dev/null 2>&1; then
     fail "doas is required but not installed. Aborting."
@@ -141,6 +141,7 @@ fi
 info "Setting up printer support (optional)..."
 if confirm "Install printer support (CUPS + network discovery)?"; then
     doas apk add cups cups-filters cups-pdf \
+        networkmanager networkmanager-openrc \
         avahi avahi-tools avahi2dns avahi2dns-openrc dnsmasq \
         gutenprint gutenprint-cups system-config-printer
 
@@ -167,14 +168,15 @@ EOF
     doas rc-service dnsmasq stop 2>/dev/null || true
     doas rc-update del dnsmasq default 2>/dev/null || true
 
+    doas rc-update add networkmanager default
     doas rc-update add avahi-daemon default
     doas rc-update add avahi2dns default
     doas rc-update add cupsd default
 
+    doas rc-service networkmanager start
     doas rc-service avahi-daemon start
     doas rc-service avahi2dns start
     doas rc-service cupsd start
-    doas rc-service networkmanager restart
 
     ok "Printer support and automatic .local discovery ready (NetworkManager)."
 fi
