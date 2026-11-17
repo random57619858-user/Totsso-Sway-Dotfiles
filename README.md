@@ -6,7 +6,7 @@ Un dotfile dinámico que se integra con Sway, Waybar, Kitty, Rofi, Hyprlock, Mak
 
 <img width="1366" height="768" alt="Totsso Sway Preview" src="https://github.com/user-attachments/assets/e332f2b3-1e4e-418e-8497-22d0b9902a50" />
 
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/435871bf-517a-46e6-a93a-7826afeb4918" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/1f0b3d6d-5d1c-48ab-bfab-4892c2b8a15c" />
 
 </div>
 
