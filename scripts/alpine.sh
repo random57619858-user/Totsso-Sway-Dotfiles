@@ -143,12 +143,16 @@ info "Setting up printer support (optional)..."
 if confirm "Install printer support (CUPS + network discovery)?"; then
     doas apk add cups cups-pdf avahi \
         gutenprint system-config-printer
+    doas addgroup lpadmin 2>/dev/null || true
+    doas addgroup "$USER" lpadmin
+    doas addgroup "$USER" lp
     doas rc-update add cupsd default
     doas rc-update add avahi-daemon default
     doas rc-service cupsd start
     doas rc-service avahi-daemon start
     ok "Printer support ready."
 fi
+
 
 info "Installing Flatpak + Flathub (optional)..."
 if confirm "Install Flatpak + Flathub?"; then
