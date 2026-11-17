@@ -23,6 +23,11 @@ doas apk update
 doas apk upgrade -a
 ok "Official edge repositories enabled and system upgraded."
 
+doas addgroup "$USER" audio
+doas addgroup "$USER" video
+doas addgroup "$USER" seat
+
+
 info "Forcing library updates for Wayland desktop..."
 doas apk add --upgrade x265-libs gdk-pixbuf libinput-libs cairo libdrm
 doas apk upgrade --available
@@ -32,7 +37,7 @@ info "Installing base packages from official repositories..."
 doas apk add \
     sway swaybg waybar kitty fish rofi-wayland  \
     playerctl brightnessctl mako wl-clipboard grim coreutils slurp ffmpeg \
-    pipewire wireplumber dbus dbus-openrc \
+    pipewire pipewire-pulse pipewire-alsa wireplumber pavucontrol dbus dbus-openrc \
     xdg-desktop-portal-wlr nwg-look cava xdg-desktop-portal-gtk \
     cliphist \
     xdg-user-dirs polkit git bash unzip build-base wget curl \
