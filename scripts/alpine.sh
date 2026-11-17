@@ -141,17 +141,45 @@ fi
 
 info "Setting up printer support (optional)..."
 if confirm "Install printer support (CUPS + network discovery)?"; then
-    doas apk add cups cups-filters cups-pdf avahi \
-    gutenprint gutenprint-cups system-config-printer
+    doas apk add cups cups-filters cups-pdf \
+        avahi avahi-tools avahi2dns avahi2dns-openrc dnsmasq \
+        gutenprint gutenprint-cups system-config-printer
+
     doas addgroup lpadmin 2>/dev/null || true
     doas addgroup "$USER" lpadmin
     doas addgroup "$USER" lp
-    doas rc-update add cupsd default
+
+    doas mkdir -p /etc/conf.d
+    doas tee /etc/conf.d/avahi2dns > /dev/null << 'EOF'
+command_args="-p 5354"
+EOF
+
+    doas mkdir -p /etc/NetworkManager/conf.d /etc/NetworkManager/dnsmasq.d
+
+    doas tee /etc/NetworkManager/conf.d/dns.conf > /dev/null << 'EOF'
+[main]
+dns=dnsmasq
+EOF
+
+    doas tee /etc/NetworkManager/dnsmasq.d/mdns.conf > /dev/null << 'EOF'
+server=/local/127.0.0.1#5354
+EOF
+
+    doas rc-service dnsmasq stop 2>/dev/null || true
+    doas rc-update del dnsmasq default 2>/dev/null || true
+
     doas rc-update add avahi-daemon default
-    doas rc-service cupsd start
+    doas rc-update add avahi2dns default
+    doas rc-update add cupsd default
+
     doas rc-service avahi-daemon start
-    ok "Printer support ready."
+    doas rc-service avahi2dns start
+    doas rc-service cupsd start
+    doas rc-service networkmanager restart
+
+    ok "Printer support and automatic .local discovery ready (NetworkManager)."
 fi
+
 
 
 info "Installing Flatpak + Flathub (optional)..."
