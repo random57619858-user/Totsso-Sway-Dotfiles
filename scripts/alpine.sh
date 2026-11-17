@@ -23,10 +23,11 @@ doas apk update
 doas apk upgrade -a
 ok "Official edge repositories enabled and system upgraded."
 
-doas addgroup "$USER" audio
-doas addgroup "$USER" video
-doas addgroup "$USER" seat
-
+info "Configuring user groups..."
+doas adduser "$USER" audio
+doas adduser "$USER" video
+doas adduser "$USER" seat
+doas adduser "$USER" input
 
 info "Forcing library updates for Wayland desktop..."
 doas apk add --upgrade x265-libs gdk-pixbuf libinput-libs cairo libdrm
@@ -35,7 +36,7 @@ ok "Core Wayland libraries updated."
 
 info "Installing base packages from official repositories..."
 doas apk add \
-    sway swaybg waybar kitty fish rofi-wayland  \
+    sway swaybg waybar kitty fish rofi-wayland xwayland libinput \
     playerctl brightnessctl mako wl-clipboard grim coreutils slurp ffmpeg \
     pipewire pipewire-pulse pipewire-alsa wireplumber pavucontrol dbus dbus-openrc \
     xdg-desktop-portal-wlr nwg-look cava xdg-desktop-portal-gtk \
@@ -45,7 +46,7 @@ doas apk add \
     wayland-dev wayland-protocols libxkbcommon-dev \
     cairo-dev meson ninja \
     seatd greetd greetd-tuigreet \
-    eudev xkeyboard-config \
+    xkeyboard-config \
     hyprlock
 ok "Base packages installed."
 
@@ -53,9 +54,7 @@ info "Enabling system services (D-Bus, Udev)..."
 doas rc-update add dbus default
 doas rc-service dbus start
 
-doas rc-update add udev default
-doas rc-service udev start
-doas rc-service udev-trigger start
+doas setup-devd udev
 ok "D-Bus and Udev enabled."
 
 info "Configuring Fish shell..."
@@ -180,8 +179,6 @@ EOF
     ok "Printer support and automatic .local discovery ready (NetworkManager)."
 fi
 
-
-
 info "Installing Flatpak + Flathub (optional)..."
 if confirm "Install Flatpak + Flathub?"; then
     doas apk add flatpak gnupg wget ca-certificates
@@ -202,7 +199,7 @@ if confirm "Install extra apps via Flatpak (Steam, Discord, VSCodium, OBS Studio
             com.discordapp.Discord \
             com.vscodium.codium \
             com.obsproject.Studio \
-            org.onlyoffice.desktopeditors    
+            com.onlyoffice.desktopeditors    
         do
             info "Installing $app..."
             flatpak install -y --noninteractive flathub "$app"
@@ -212,6 +209,5 @@ if confirm "Install extra apps via Flatpak (Steam, Discord, VSCodium, OBS Studio
         warn "Flathub is not configured. Skipping Flatpak apps installation."
     fi
 fi
-
 
 finish_install
