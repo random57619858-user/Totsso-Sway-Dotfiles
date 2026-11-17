@@ -5,16 +5,13 @@
 **Entorno Wayland dinámico y minimalista para Artix Linux y Alpine Linux**  
 *Integración total con Sway, Waybar, Kitty, Rofi, Hyprlock y Mako mediante paletas Material You generadas con Matugen.*
 
-<p>
-  <img src="https://shields.io" alt="Artix Linux" />
-  <img src="https://shields.io" alt="Alpine Linux" />
-</p>
 
 <br />
 
-| Vista Principal (Artix Linux) | Reproductor y Paleta Dinámica |
+|  (Artix Linux) | (Alpine Linux) |
 | :---: | :---: |
-| <img width="100%" alt="Totsso Sway Preview" src="https://github.com" /> | <img width="100%" alt="Totsso Sway Preview 2" src="https://github.com" /> |
+| "https://github.com/user-attachments/assets/e332f2b3-1e4e-418e-8497-22d0b9902a50" /> | <img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/1692a668-1c93-45d7-98ac-540cedb3c3cd" />
+ /> |
 
 </div>
 
