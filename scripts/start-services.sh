@@ -1,30 +1,15 @@
 #!/usr/bin/env bash
 
-# Lanzar PipeWire si no está corriendo
-if ! pgrep -x "pipewire" > /dev/null; then
+if ! pgrep -x "pipewire" >/dev/null 2>&1; then
     pipewire &
+    sleep 1
 fi
-if ! pgrep -x "pipewire-pulse" > /dev/null; then
+
+if ! pgrep -f "pipewire-pulse" >/dev/null 2>&1; then
     pipewire-pulse &
+    sleep 0.5
 fi
-if ! pgrep -x "wireplumber" > /dev/null; then
+
+if ! pgrep -x "wireplumber" >/dev/null 2>&1; then
     wireplumber &
-fi
-
-if command -v cupsd >/dev/null 2>&1; then
-    if ! pgrep -x "cupsd" > /dev/null; then
-        /usr/bin/cupsd &
-    fi
-fi
-
-if command -v avahi-daemon >/dev/null 2>&1; then
-    if ! pgrep -x "avahi-daemon" > /dev/null; then
-        /usr/bin/avahi-daemon --daemonize --no-chroot &
-    fi
-fi
-
-if [ -f /usr/lib/elogind/elogind ]; then
-    if ! pgrep -x "elogind" > /dev/null; then
-        /usr/lib/elogind/elogind &
-    fi
 fi
