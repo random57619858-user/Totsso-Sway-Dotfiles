@@ -1,4 +1,4 @@
-#!/usr/init/env bash
+#!/usr/bin/env bash
 
 if ! command -v doas >/dev/null 2>&1; then
     fail "doas is required but not installed. Aborting."
@@ -39,6 +39,7 @@ doas apk add \
     sway swaybg waybar kitty fish rofi-wayland xwayland libinput \
     playerctl brightnessctl mako wl-clipboard grim coreutils slurp ffmpeg \
     pipewire pipewire-pulse pipewire-alsa wireplumber pavucontrol dbus dbus-openrc \
+    networkmanager networkmanager-openrc \
     xdg-desktop-portal-wlr nwg-look cava xdg-desktop-portal-gtk \
     cliphist \
     xdg-user-dirs polkit git bash unzip build-base wget curl \
@@ -50,12 +51,15 @@ doas apk add \
     hyprlock
 ok "Base packages installed."
 
-info "Enabling system services (D-Bus, Udev)..."
+info "Enabling system services (D-Bus, Udev, NetworkManager)..."
 doas rc-update add dbus default
 doas rc-service dbus start
 
+doas rc-update add networkmanager default
+doas rc-service networkmanager start
+
 doas setup-devd udev
-ok "D-Bus and Udev enabled."
+ok "D-Bus, Udev, and NetworkManager enabled."
 
 info "Configuring Fish shell..."
 if command -v fish >/dev/null 2>&1; then
@@ -138,49 +142,6 @@ if [ -f "$DOTFILES_DIR/scripts/start-services.sh" ]; then
     fi
 fi
 
-info "Setting up printer support (optional)..."
-if confirm "Install printer support (CUPS + network discovery)?"; then
-    doas apk add cups cups-filters cups-pdf \
-        networkmanager networkmanager-openrc \
-        avahi avahi-tools avahi2dns avahi2dns-openrc dnsmasq \
-        gutenprint gutenprint-cups system-config-printer
-
-    doas addgroup lpadmin 2>/dev/null || true
-    doas addgroup "$USER" lpadmin
-    doas addgroup "$USER" lp
-
-    doas mkdir -p /etc/conf.d
-    doas tee /etc/conf.d/avahi2dns > /dev/null << 'EOF'
-command_args="-p 5354"
-EOF
-
-    doas mkdir -p /etc/NetworkManager/conf.d /etc/NetworkManager/dnsmasq.d
-
-    doas tee /etc/NetworkManager/conf.d/dns.conf > /dev/null << 'EOF'
-[main]
-dns=dnsmasq
-EOF
-
-    doas tee /etc/NetworkManager/dnsmasq.d/mdns.conf > /dev/null << 'EOF'
-server=/local/127.0.0.1#5354
-EOF
-
-    doas rc-service dnsmasq stop 2>/dev/null || true
-    doas rc-update del dnsmasq default 2>/dev/null || true
-
-    doas rc-update add networkmanager default
-    doas rc-update add avahi-daemon default
-    doas rc-update add avahi2dns default
-    doas rc-update add cupsd default
-
-    doas rc-service networkmanager start
-    doas rc-service avahi-daemon start
-    doas rc-service avahi2dns start
-    doas rc-service cupsd start
-
-    ok "Printer support and automatic .local discovery ready (NetworkManager)."
-fi
-
 info "Installing Flatpak + Flathub (optional)..."
 if confirm "Install Flatpak + Flathub?"; then
     doas apk add flatpak gnupg wget ca-certificates
@@ -204,7 +165,7 @@ if confirm "Install extra apps via Flatpak (Steam, Discord, VSCodium, OBS Studio
             com.onlyoffice.desktopeditors    
         do
             info "Installing $app..."
-            flatpak install -y --noninteractive flathub "$app"
+            flatpak install -y --user --noninteractive flathub "$app" || warn "Could not install $app, skipping..."
         done
         ok "Extra apps installed via Flatpak."
     else
