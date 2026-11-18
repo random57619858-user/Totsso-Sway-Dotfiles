@@ -40,7 +40,7 @@ Un dotfile dinámico que se integra con Sway, Waybar, Kitty, Rofi, Hyprlock, Mak
 ### Clonar y ejecutar
 
 ```bash
-git clone [https://github.com/random57619858-user/Totsso-Sway-Dotfiles](https://github.com/random57619858-user/Totsso-Sway-Dotfiles)
+git clone https://github.com/random57619858-user/Totsso-Sway-Dotfiles
 cd Totsso-Sway-Dotfiles
 chmod +x install.sh
 ./install.sh
