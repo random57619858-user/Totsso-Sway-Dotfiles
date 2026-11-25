@@ -1,0 +1,24 @@
+{
+    "label" : "logout",
+    "action" : "swaymsg exit",
+    "text" : "Log out",
+    "keybind" : "l"
+}
+{
+    "label" : "suspend",
+    "action" : "loginctl suspend",
+    "text" : "Suspend",
+    "keybind" : "u"
+}
+{
+    "label" : "reboot",
+    "action" : "loginctl reboot",
+    "text" : "Reboot",
+    "keybind" : "r"
+}
+{
+    "label" : "shutdown",
+    "action" : "loginctl poweroff",
+    "text" : "Shut down",
+    "keybind" : "s"
+}
