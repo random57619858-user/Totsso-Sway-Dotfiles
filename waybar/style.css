@@ -27,6 +27,7 @@ tooltip label {
 #workspaces,
 #taskbar,
 #custom-cava,
+#background,
 #clock,
 #mpris,
 #hardware,
@@ -54,7 +55,8 @@ tooltip label {
 
 #hardware,
 #system,
-#session {
+#session,
+#background {
     padding: 3px 5px;
     margin-left: 6px;
 }
@@ -281,5 +283,77 @@ tooltip label {
     border-color: @error;
 }
 
+#background.empty,
+#background.empty * {
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    font-size: 0;
+}
 
+#custom-background {
+    padding: 0 9px;
+    font-size: 12px;
+    color: @tertiary;
+    transition: color 180ms ease;
+}
 
+#custom-background.none {
+    color: @fg_dim;
+    opacity: 0.7;
+}
+
+#background.expanded #custom-background,
+#custom-background:hover {
+    color: @primary;
+}
+
+#custom-bgapp1,
+#custom-bgapp2,
+#custom-bgapp3 {
+    padding: 0 7px;
+    margin: 0 1px;
+    min-width: 18px;
+    color: @secondary;
+    background: transparent;
+    border-radius: 100px;
+    transition: background-color 160ms ease, color 160ms ease;
+}
+
+#custom-bgapp1:hover,
+#custom-bgapp2:hover,
+#custom-bgapp3:hover {
+    background: alpha(@primary, 0.18);
+    color: @primary;
+}
+
+#tray {
+    padding: 0 4px;
+    margin-right: 2px;
+    background: transparent;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+}
+
+#tray menu {
+    background: @bg_alt;
+    border: 1px solid alpha(@border, 0.85);
+    border-radius: 12px;
+    padding: 4px;
+    color: @fg;
+}
+
+#tray menu menuitem:hover {
+    background: @primary_ctr;
+    color: @on_primary_ctr;
+    border-radius: 8px;
+}

@@ -27,6 +27,8 @@ Un dotfile dinámico que se integra con Sway, Waybar, Kitty, Rofi, Mako y Matuge
 
 **Modo No Molestar** — Módulo interactivo en Waybar que silencia Mako con un clic, cambiando icono y color según el estado.
 
+**Apps en segundo plano** — Una flechita `󰅁` antes del bloque de hardware indica cuántas apps siguen corriendo sin que las veas: iconos de tray (Discord, Telegram…) y apps sin ventana que siguen funcionando, como SimpMusic reproduciendo audio. Al pasar el ratón se desliza hacia la izquierda y muestra sus iconos; el tooltip lista los nombres. Sin apps en segundo plano la flechita queda atenuada y sin contador.
+
 **Tooltips enriquecidos** — CPU, RAM, MPRIS y Reloj muestran información detallada al pasar el ratón, incluyendo un calendario completo.
 
 **Integración Matugen** — Todas las interfaces heredan la paleta Material You generada desde el fondo de pantalla, incluidos los colores nombrados de GTK3 y GTK4/libadwaita.
