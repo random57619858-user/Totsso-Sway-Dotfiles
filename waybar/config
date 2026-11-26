@@ -7,6 +7,7 @@
     "margin-right": 10,
     "modules-left": [
         "sway/workspaces",
+        "group/apps",
         "custom/cava"
     ],
     "modules-center": [
@@ -14,9 +15,10 @@
         "clock"
     ],
     "modules-right": [
-        "group/apps",
-        "group/hardware",
-        "group/system",
+        "group/info",
+        "pulseaudio",
+        "custom/network",
+        "battery",
         "group/session"
     ],
     "sway/workspaces": {
@@ -35,17 +37,15 @@
         "drawer": {
             "transition-duration": 260,
             "children-class": "apps-child",
-            "transition-left-to-right": false
+            "transition-left-to-right": true
         },
         "modules": [
             "custom/apps",
-            "wlr/taskbar#apps",
-            "tray",
-            "custom/tray-rescan"
+            "wlr/taskbar#apps"
         ]
     },
     "custom/apps": {
-        "format": "apps",
+        "format": "Apps",
         "tooltip": false
     },
     "wlr/taskbar#apps": {
@@ -55,20 +55,7 @@
         "tooltip-format": "{title}",
         "on-click": "activate",
         "on-click-middle": "close",
-        "active-first": true,
         "all-outputs": true
-    },
-    "custom/tray-rescan": {
-        "exec": "~/.config/waybar/tray.sh rescan 5",
-        "interval": "once",
-        "format": ""
-    },
-    "tray": {
-        "icon-size": 16,
-        "spacing": 6,
-        "show-passive-items": true,
-        "reverse-direction": true,
-        "tooltip": true
     },
     "mpris": {
         "format": "󰎆 {artist} - {title}",
@@ -94,16 +81,6 @@
                 "today": "<b><u>{}</u></b>"
             }
         }
-    },
-    "wlr/taskbar": {
-        "format": "{icon}",
-        "icon-size": 18,
-        "tooltip": true,
-        "tooltip-format": "{title}",
-        "on-click": "activate",
-        "on-click-middle": "close",
-        "active-first": true,
-        "all-outputs": false
     },
     "custom/temperature": {
         "exec": "~/.config/waybar/temp.sh",
@@ -171,15 +148,6 @@
         "tooltip": true,
         "tooltip-format": "{timeTo}\n{capacity}% · {power}W"
     },
-    "group/hardware": {
-        "orientation": "horizontal",
-        "modules": [
-            "cpu",
-            "memory",
-            "custom/temperature"
-        ],
-        "name": "hardware"
-    },
     "group/session": {
         "orientation": "horizontal",
         "modules": [
@@ -188,20 +156,29 @@
         ],
         "name": "session"
     },
-    "group/system": {
-        "orientation": "horizontal",
-        "name": "system",
-        "modules": [
-            "pulseaudio",
-            "custom/network",
-            "battery"
-        ]
-    },
     "custom/network": {
         "exec": "~/.config/waybar/net.sh",
         "interval": 5,
         "return-type": "json",
         "format": "{}",
         "tooltip": true
+    },
+    "group/info": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 260,
+            "children-class": "info-child",
+            "transition-left-to-right": false
+        },
+        "modules": [
+            "custom/info",
+            "cpu",
+            "memory",
+            "custom/temperature"
+        ]
+    },
+    "custom/info": {
+        "format": "Info",
+        "tooltip": false
     }
 }

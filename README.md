@@ -23,11 +23,15 @@ Un dotfile dinámico que se integra con Sway, Waybar, Kitty, Rofi, Mako y Matuge
 
 **Menú de apagado con wlogout** — Cuadrícula de tarjetas redondeadas (cerrar sesión, suspender, reiniciar, apagar) tematizada con Matugen. Si `wlogout` no está instalado, cae al menú de Rofi.
 
-**Waybar ampliada** — Grupos de hardware y sistema, taskbar de ventanas, temperatura del CPU, SSID completo de la red y controles de MPRIS con clic y scroll.
+**Waybar ampliada** — Bloque deslizante `Info` con CPU, RAM y temperatura, píldoras independientes de volumen, red y batería, SSID completo de la red y controles de MPRIS con clic y scroll.
 
 **Modo No Molestar** — Módulo interactivo en Waybar que silencia Mako con un clic, cambiando icono y color según el estado.
 
-**Menú deslizante de apps** — Una píldora con la palabra `apps` antes del bloque de hardware que, al pasar el ratón, se desliza hacia la izquierda y muestra los iconos reales de las apps abiertas (de cualquier workspace) más las apps que viven en la bandeja. Clic para activar, clic central para cerrar. Reemplaza al taskbar fijo de la barra.
+**Menú deslizante de apps** — Una píldora con la palabra `Apps` entre el módulo de workspaces y el de cava que, al pasar el ratón, se desliza hacia la derecha y muestra los iconos reales de las apps abiertas, estén en el workspace que estén. El orden de los iconos es fijo y no cambia al enfocar una ventana. Clic para activar, clic central para cerrar. Reemplaza al taskbar fijo de la barra.
+
+**Bloque deslizante Info** — CPU, RAM y temperatura viven dentro de un desplegable con la palabra `Info`, junto a las píldoras de volumen, red y batería. Al pasar el ratón se despliega hacia la izquierda y deja la barra más despejada.
+
+**Píldoras separadas** — Volumen, red y batería dejaron de compartir un solo bloque: cada una es su propia píldora para que la barra respire mejor.
 
 **Tooltips enriquecidos** — CPU, RAM, MPRIS y Reloj muestran información detallada al pasar el ratón, incluyendo un calendario completo.
 
@@ -66,7 +70,7 @@ cd Totsso-Sway-Dotfiles
 
 - **Sway** — Compositor Wayland (con soporte para Xwayland y `libinput`).
 
-- **Waybar** — Barra de estado con workspaces, cava, MPRIS, menú deslizante de apps, hardware, red y sesión.
+- **Waybar** — Barra de estado con workspaces, menú deslizante de apps, cava, MPRIS, bloque deslizante de Info, red y sesión.
 
 - **Rofi** — Lanzador unificado (apps, wallpapers, clipboard) con tarjetas redondeadas y apartados intercambiables con `←` `→`.
 
@@ -75,8 +79,6 @@ cd Totsso-Sway-Dotfiles
 - **Fish** — Shell interactiva (opcional, se desactiva el saludo).
 
 - **Cava** — Visualizador de audio integrado en Waybar.
-
-- **tray.sh** — Re-registra en la bandeja las apps que se quedaron sin host al reiniciar Waybar.
 
 
 ### Tematización y fondos
