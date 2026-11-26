@@ -7,7 +7,6 @@
     "margin-right": 10,
     "modules-left": [
         "sway/workspaces",
-        "wlr/taskbar",
         "custom/cava"
     ],
     "modules-center": [
@@ -15,7 +14,7 @@
         "clock"
     ],
     "modules-right": [
-        "group/background",
+        "group/apps",
         "group/hardware",
         "group/system",
         "group/session"
@@ -31,24 +30,38 @@
         "format": "{text}",
         "tooltip": false
     },
-    "group/background": {
+    "group/apps": {
         "orientation": "horizontal",
         "drawer": {
             "transition-duration": 260,
-            "children-class": "tray-child",
+            "children-class": "apps-child",
             "transition-left-to-right": false
         },
         "modules": [
-            "custom/background",
-            "tray"
+            "custom/apps",
+            "wlr/taskbar#apps",
+            "tray",
+            "custom/tray-rescan"
         ]
     },
-    "custom/background": {
-        "exec": "~/.config/waybar/tray.sh count",
-        "interval": 2,
-        "return-type": "json",
-        "format": "{text}",
-        "tooltip": true
+    "custom/apps": {
+        "format": "apps",
+        "tooltip": false
+    },
+    "wlr/taskbar#apps": {
+        "format": "{icon}",
+        "icon-size": 16,
+        "tooltip": true,
+        "tooltip-format": "{title}",
+        "on-click": "activate",
+        "on-click-middle": "close",
+        "active-first": true,
+        "all-outputs": true
+    },
+    "custom/tray-rescan": {
+        "exec": "~/.config/waybar/tray.sh rescan 5",
+        "interval": "once",
+        "format": ""
     },
     "tray": {
         "icon-size": 16,

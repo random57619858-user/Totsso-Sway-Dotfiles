@@ -27,7 +27,7 @@ Un dotfile dinámico que se integra con Sway, Waybar, Kitty, Rofi, Mako y Matuge
 
 **Modo No Molestar** — Módulo interactivo en Waybar que silencia Mako con un clic, cambiando icono y color según el estado.
 
-**Bandeja del sistema desplegable** — Una flechita `󰅁` antes del bloque de hardware muestra cuántas apps hay en la bandeja (SNI). Al pasar el ratón se desliza hacia la izquierda y aparecen sus iconos reales, que se abren con su propio menú. Si una app quedó registrada contra un host anterior (por ejemplo tras reiniciar Waybar), `tray.sh` la vuelve a registrar automáticamente.
+**Menú deslizante de apps** — Una píldora con la palabra `apps` antes del bloque de hardware que, al pasar el ratón, se desliza hacia la izquierda y muestra los iconos reales de las apps abiertas (de cualquier workspace) más las apps que viven en la bandeja. Clic para activar, clic central para cerrar. Reemplaza al taskbar fijo de la barra.
 
 **Tooltips enriquecidos** — CPU, RAM, MPRIS y Reloj muestran información detallada al pasar el ratón, incluyendo un calendario completo.
 
@@ -66,7 +66,7 @@ cd Totsso-Sway-Dotfiles
 
 - **Sway** — Compositor Wayland (con soporte para Xwayland y `libinput`).
 
-- **Waybar** — Barra de estado con workspaces, taskbar, cava, MPRIS, hardware, red y sesión.
+- **Waybar** — Barra de estado con workspaces, cava, MPRIS, menú deslizante de apps, hardware, red y sesión.
 
 - **Rofi** — Lanzador unificado (apps, wallpapers, clipboard) con tarjetas redondeadas y apartados intercambiables con `←` `→`.
 
@@ -76,7 +76,7 @@ cd Totsso-Sway-Dotfiles
 
 - **Cava** — Visualizador de audio integrado en Waybar.
 
-- **tray.sh** — Cuenta las apps de la bandeja y re-registra las que se quedaron sin host al reiniciar Waybar.
+- **tray.sh** — Re-registra en la bandeja las apps que se quedaron sin host al reiniciar Waybar.
 
 
 ### Tematización y fondos

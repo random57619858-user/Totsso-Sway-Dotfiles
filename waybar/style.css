@@ -27,7 +27,7 @@ tooltip label {
 #workspaces,
 #taskbar,
 #custom-cava,
-#background,
+#apps,
 #clock,
 #mpris,
 #hardware,
@@ -56,8 +56,12 @@ tooltip label {
 #hardware,
 #system,
 #session,
-#background {
+#apps {
     padding: 3px 5px;
+}
+
+#apps {
+    padding: 2px 5px;
     margin-left: 6px;
 }
 
@@ -104,7 +108,7 @@ tooltip label {
 }
 
 #taskbar button {
-    padding: 3px 8px;
+    padding: 2px 8px;
     margin: 0 1px;
     background: transparent;
     border-radius: 100px;
@@ -283,31 +287,16 @@ tooltip label {
     border-color: @error;
 }
 
-#background.empty,
-#background.empty * {
-    min-width: 0;
-    min-height: 0;
-    padding: 0;
-    margin: 0;
-    border: none;
-    background: transparent;
-    font-size: 0;
-}
-
-#custom-background {
+#custom-apps {
     padding: 0 9px;
     font-size: 12px;
+    letter-spacing: 0.3px;
     color: @tertiary;
     transition: color 180ms ease;
 }
 
-#custom-background.none {
-    color: @fg_dim;
-    opacity: 0.7;
-}
-
-#background.expanded #custom-background,
-#custom-background:hover {
+#apps.expanded #custom-apps,
+#custom-apps:hover {
     color: @primary;
 }
 
