@@ -10,9 +10,9 @@ mkdir -p "$SLOTS"
 
 read -r -d '' PY_SRC <<'PY'
 import json
+import os
 import re
 import subprocess
-import sys
 
 
 def run(cmd):
@@ -22,37 +22,25 @@ def run(cmd):
         return ""
 
 
-tray = []
-raw = run(["busctl", "--user", "get-property", "org.kde.StatusNotifierWatcher",
-           "/StatusNotifierWatcher", "org.kde.StatusNotifierWatcher",
-           "RegisteredStatusNotifierItems"])
-for entry in re.findall(r'"([^"]+)"', raw):
-    service, _, path = entry.partition("/")
-    title = run(["busctl", "--user", "get-property", service, "/" + path,
-                 "org.kde.StatusNotifierItem", "Title"]).strip()
-    title = re.sub(r'^s\s*', "", title).strip('"')
-    tray.append(title or path.split("/")[-1])
-
-def ancestors(pid, depth=6):
-    seen = set()
-    while pid and depth > 0:
-        seen.add(pid)
-        try:
-            with open("/proc/%s/status" % pid) as fh:
-                for line in fh:
-                    if line.startswith("PPid:"):
-                        pid = line.split()[1]
-                        break
-                else:
-                    break
-        except Exception:
-            break
-        depth -= 1
-    return seen
+def norm(text):
+    return re.sub(r"[^a-z0-9]", "", (text or "").lower())
 
 
-visible = set()
-window_ids = set()
+def display_name(raw):
+    name = (raw or "?").split(".")[-1]
+    name = name.replace("_", " ").replace("-", " ").strip()
+    return name[:1].upper() + name[1:] if name else "?"
+
+
+def comm(pid):
+    try:
+        with open("/proc/%s/comm" % pid) as fh:
+            return fh.read().strip()
+    except Exception:
+        return ""
+
+
+windows = []
 tree = run(["swaymsg", "-t", "get_tree", "-r"])
 if tree:
     try:
@@ -60,20 +48,68 @@ if tree:
     except Exception:
         root = None
 
-    def walk(node):
+    def walk(node, ws=None):
+        if node.get("type") == "workspace":
+            ws = node.get("name")
         for key in ("nodes", "floating_nodes"):
             for child in node.get(key) or []:
-                walk(child)
+                walk(child, ws)
         if node.get("type") == "con" and node.get("pid"):
-            visible.add(str(node["pid"]))
-            if node.get("app_id"):
-                window_ids.add(node["app_id"].lower())
+            props = node.get("window_properties") or {}
+            pid = str(node["pid"])
+            windows.append({
+                "pid": pid,
+                "comm": norm(comm(pid)),
+                "name": node.get("app_id") or props.get("class") or "?",
+                "ws": ws or "?",
+                "visible": bool(node.get("visible")),
+                "con": str(node.get("id")),
+            })
 
     if root:
         walk(root)
 
-ignore = {"waybar", "cava", "pipewire", "wireplumber", "pulseaudio", "pw-cat"}
-audio = {}
+window_pids = {win["pid"] for win in windows}
+window_comms = {win["comm"] for win in windows if win["comm"]}
+
+
+def has_window(pid, binary=""):
+    if pid and pid in window_pids:
+        return True
+    key = norm(binary)
+    if key and key in window_comms:
+        return True
+    if key and len(key) >= 4:
+        for other in window_comms:
+            if key in other or other in key:
+                return True
+    return False
+
+
+rows = []
+
+for win in windows:
+    if win["visible"]:
+        continue
+    rows.append((win["name"], win["pid"], win["ws"], win["con"]))
+
+raw = run(["busctl", "--user", "get-property", "org.kde.StatusNotifierWatcher",
+           "/StatusNotifierWatcher", "org.kde.StatusNotifierWatcher",
+           "RegisteredStatusNotifierItems"])
+for entry in re.findall(r'"([^"]+)"', raw):
+    service, _, path = entry.partition("/")
+    pid = run(["busctl", "--user", "call", "org.freedesktop.DBus", "/org/freedesktop/DBus",
+               "org.freedesktop.DBus", "GetConnectionUnixProcessID", "s", service]).strip()
+    pid = re.sub(r"^u\s*", "", pid)
+    title = run(["busctl", "--user", "get-property", service, "/" + path,
+                 "org.kde.StatusNotifierItem", "Title"]).strip()
+    title = re.sub(r"^s\s*", "", title).strip('"')
+    name = title or path.split("/")[-1]
+    if has_window(pid, comm(pid) if pid else name):
+        continue
+    rows.append((name, pid, "-", ""))
+
+ignore = {"waybar", "cava", "pipewire", "wireplumber", "pulseaudio", "pwcat"}
 for block in run(["pactl", "list", "sink-inputs"]).split("Sink Input #")[1:]:
     name = re.search(r'application\.name = "([^"]*)"', block)
     pid = re.search(r'application\.process\.id = "([^"]*)"', block)
@@ -82,22 +118,20 @@ for block in run(["pactl", "list", "sink-inputs"]).split("Sink Input #")[1:]:
         continue
     name = name.group(1)
     pid = pid.group(1) if pid else ""
-    binary = (binary.group(1) if binary else name).lower()
-    if pid and (ancestors(pid) & visible):
+    binary = binary.group(1) if binary else name
+    if norm(binary) in ignore or norm(name) in ignore:
         continue
-    if any(name.lower() in app or app in name.lower() for app in window_ids):
+    if has_window(pid, binary):
         continue
-    if binary in ignore or name.lower() in ignore:
-        continue
-    if any(name.lower() == item.lower() for item in tray):
-        continue
-    audio.setdefault(name, pid)
+    rows.append((name, pid, "-", ""))
 
-for item in tray:
-    print("tray\t%s" % item)
-
-for name, pid in audio.items():
-    print("audio\t%s\t%s" % (name, pid))
+seen = set()
+for name, pid, ws, con in rows:
+    key = pid or name.lower()
+    if key in seen:
+        continue
+    seen.add(key)
+    print("\t".join([name, display_name(name), ws, con, pid]))
 PY
 
 gather() {
@@ -127,65 +161,84 @@ jesc() {
 }
 
 app_icon() {
-    local key="${1,,}"
+    local key="${1,,}" letter
     case "$key" in
-        *simp*|*music*|*spotify*|*ncspot*|*tidal*|*rhythmbox*|*amberol*|*cider*)
-            printf '󰝚' ;;
-        *discord*|*vesktop*|*webcord*|*equibop*)
+        *serein*|*discord*|*vesktop*|*webcord*|*equibop*|*armcord*)
             printf '󰙯' ;;
-        *telegram*|*signal*|*whatsapp*|*element*|*slack*|*matrix*)
+        *simp*|*music*|*spotify*|*ncspot*|*tidal*|*rhythmbox*|*amberol*|*cider*|*mpd*|*feishin*)
+            printf '󰝚' ;;
+        *telegram*|*signal*|*whatsapp*|*element*|*slack*|*matrix*|*zulip*|*mattermost*)
             printf '󰍡' ;;
         *mpv*|*vlc*|*celluloid*|*haruna*|*youtube*)
             printf '󰖜' ;;
-        *firefox*|*brave*|*chrom*|*zen*|*qutebrowser*)
+        *firefox*|*brave*|*chrom*|*zen*|*qutebrowser*|*vivaldi*|*epiphany*|*falkon*|*tor-browser*)
             printf '󰖟' ;;
-        *steam*|*lutris*|*heroic*|*prism*)
+        *kitty*|*alacritty*|*foot*|*wezterm*|*konsole*|*terminal*|*xterm*|*ghostty*|*nvim*|*neovide*|*vim*|*emacs*)
+            printf '󰆍' ;;
+        *code*|*vscodium*|*cursor*|*zed*|*sublime*|*idea*|*studio*)
+            printf '󰨞' ;;
+        *thunar*|*nautilus*|*dolphin*|*pcmanfm*|*nemo*|*caja*|*files*)
+            printf '󰉋' ;;
+        *gimp*|*inkscape*|*krita*|*imv*|*loupe*|*eog*|*gwenview*)
+            printf '󰈟' ;;
+        *libreoffice*|*writer*|*calc*|*impress*|*zathura*|*evince*|*okular*|*pdf*|*onlyoffice*)
+            printf '󰈙' ;;
+        *steam*|*lutris*|*heroic*|*prism*|*gamescope*|*retroarch*)
             printf '󰊗' ;;
         *keepass*|*bitwarden*|*1password*)
             printf '󰌾' ;;
+        *pavucontrol*|*pulse*|*easyeffects*|*wireplumber*)
+            printf '󰕾' ;;
+        *mail*|*thunderbird*|*evolution*|*geary*)
+            printf '󰇮' ;;
         *)
-            printf '󰖲' ;;
+            letter=$(printf '%s' "$key" | tr -cd '[:alnum:]' | cut -c1 | tr '[:lower:]' '[:upper:]')
+            if [ -n "$letter" ]; then printf '%s' "$letter"; else printf '󰖲'; fi ;;
     esac
 }
 
 mode_count() {
-    local data trays audios total tooltip
+    local data total tooltip
     data=$(gather)
-    trays=$(printf '%s' "$data" | grep -c '^tray' || true)
-    audios=$(printf '%s' "$data" | grep -c '^audio' || true)
-    total=$(( trays + audios ))
+    total=$(printf '%s' "$data" | grep -c . || true)
 
     if (( total == 0 )); then
         printf '{"text": "󰅁", "class": "none", "tooltip": "Sin apps en segundo plano"}\n'
         return 0
     fi
 
-    tooltip=$(printf '%s' "$data" | awk -F'\t' '/^(tray|audio)\t/ { printf "%s· %s", (n++ ? "\n" : ""), $2 }')
+    tooltip=$(printf '%s' "$data" | awk -F'\t' '{
+        label = $2
+        if ($3 != "-") label = label " · ws " $3
+        printf "%s· %s", (n++ ? "\n" : ""), label
+    }')
     printf '{"text": "󰅁 %d", "class": "has-items", "tooltip": "%s"}\n' \
         "$total" "$(jesc "$tooltip")"
 }
 
 mode_slot() {
-    local idx="$1" data line name pid icon
+    local idx="$1" data line name display ws con pid icon tip
     data=$(gather)
-    line=$(printf '%s\n' "$data" | grep '^audio' | sed -n "${idx}p")
+    line=$(printf '%s\n' "$data" | sed -n "${idx}p")
     if [ -z "$line" ]; then
         rm -f "$SLOTS/$idx"
         printf '{"text": "", "class": "empty"}\n'
         return 0
     fi
-    IFS=$'\t' read -r _ name pid <<< "$line"
-    printf '%s\t%s' "$name" "$pid" > "$SLOTS/$idx"
-    icon=$(app_icon "$name")
-    printf '{"text": "%s", "class": "bgapp", "tooltip": "%s"}\n' "$icon" "$(jesc "$name")"
+    IFS=$'\t' read -r name display ws con pid <<< "$line"
+    printf '%s\t%s\t%s\t%s' "$display" "$ws" "$con" "$pid" > "$SLOTS/$idx"
+    icon=$(app_icon "$name $display")
+    tip="$display"
+    [ "$ws" != "-" ] && tip+=" · ws $ws"
+    printf '{"text": "%s", "class": "bgapp", "tooltip": "%s"}\n' "$icon" "$(jesc "$tip")"
 }
 
 mode_focus() {
-    local idx="$1" name pid
+    local idx="$1" display ws con pid
     [ -r "$SLOTS/$idx" ] || return 0
-    IFS=$'\t' read -r name pid < "$SLOTS/$idx"
-    [ -n "${pid:-}" ] || return 0
-    swaymsg "[pid=$pid] focus" >/dev/null 2>&1
+    IFS=$'\t' read -r display ws con pid < "$SLOTS/$idx"
+    [ -n "${con:-}" ] || return 0
+    swaymsg "[con_id=$con] focus" >/dev/null 2>&1
     rm -f "$CACHE"
 }
 
