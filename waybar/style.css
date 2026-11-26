@@ -74,6 +74,10 @@ tooltip label {
     margin-left: 6px;
 }
 
+#session {
+    margin-left: 6px;
+}
+
 #workspaces {
     padding: 3px;
 }
@@ -179,7 +183,7 @@ tooltip label {
 
 #clock {
     padding: 0 14px;
-    margin-right: 6px;
+    margin: 0 6px;
     color: @primary;
 }
 
