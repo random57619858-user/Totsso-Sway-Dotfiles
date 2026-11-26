@@ -311,31 +311,30 @@ tooltip label {
     color: @primary;
 }
 
-#custom-bgapp1,
-#custom-bgapp2,
-#custom-bgapp3,
-#custom-bgapp4 {
-    padding: 0 7px;
-    margin: 0 1px;
-    min-width: 18px;
-    color: @secondary;
-    background: transparent;
-    border-radius: 100px;
-    transition: background-color 160ms ease, color 160ms ease;
-}
-
-#custom-bgapp1:hover,
-#custom-bgapp2:hover,
-#custom-bgapp3:hover,
-#custom-bgapp4:hover {
-    background: alpha(@primary, 0.18);
-    color: @primary;
-}
-
 #tray {
-    min-width: 0;
-    min-height: 0;
-    padding: 0;
-    margin: 0;
-    opacity: 0;
+    padding: 0 4px;
+    margin-right: 2px;
+    background: transparent;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+}
+
+#tray menu {
+    background: @bg_alt;
+    border: 1px solid alpha(@border, 0.85);
+    border-radius: 12px;
+    padding: 4px;
+    color: @fg;
+}
+
+#tray menu menuitem:hover {
+    background: @primary_ctr;
+    color: @on_primary_ctr;
+    border-radius: 8px;
 }

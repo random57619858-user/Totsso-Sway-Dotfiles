@@ -27,7 +27,7 @@ Un dotfile dinámico que se integra con Sway, Waybar, Kitty, Rofi, Mako y Matuge
 
 **Modo No Molestar** — Módulo interactivo en Waybar que silencia Mako con un clic, cambiando icono y color según el estado.
 
-**Apps en segundo plano** — Una flechita `󰅁` antes del bloque de hardware indica cuántas apps siguen corriendo sin estar a la vista: ventanas en otros workspaces o en el scratchpad, apps que solo viven en el tray y apps sin ventana que siguen activas (por ejemplo SimpMusic reproduciendo audio). Al pasar el ratón se despliegan sus iconos; al hacer clic en uno se salta a esa ventana. El tooltip lista nombre y workspace de cada una.
+**Bandeja del sistema desplegable** — Una flechita `󰅁` antes del bloque de hardware muestra cuántas apps hay en la bandeja (SNI). Al pasar el ratón se desliza hacia la izquierda y aparecen sus iconos reales, que se abren con su propio menú. Si una app quedó registrada contra un host anterior (por ejemplo tras reiniciar Waybar), `tray.sh` la vuelve a registrar automáticamente.
 
 **Tooltips enriquecidos** — CPU, RAM, MPRIS y Reloj muestran información detallada al pasar el ratón, incluyendo un calendario completo.
 
@@ -76,7 +76,7 @@ cd Totsso-Sway-Dotfiles
 
 - **Cava** — Visualizador de audio integrado en Waybar.
 
-- **background.sh** — Detecta qué apps están en segundo plano (ventanas no visibles, tray y audio) para la flechita desplegable de Waybar.
+- **tray.sh** — Cuenta las apps de la bandeja y re-registra las que se quedaron sin host al reiniciar Waybar.
 
 
 ### Tematización y fondos

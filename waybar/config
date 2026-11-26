@@ -40,57 +40,22 @@
         },
         "modules": [
             "custom/background",
-            "custom/bgapp1",
-            "custom/bgapp2",
-            "custom/bgapp3",
-            "custom/bgapp4",
             "tray"
         ]
     },
     "custom/background": {
-        "exec": "~/.config/waybar/background.sh count",
+        "exec": "~/.config/waybar/tray.sh count",
         "interval": 2,
         "return-type": "json",
         "format": "{text}",
         "tooltip": true
     },
-    "custom/bgapp1": {
-        "exec": "~/.config/waybar/background.sh slot 1",
-        "interval": 3,
-        "return-type": "json",
-        "format": "{text}",
-        "tooltip": true,
-        "on-click": "~/.config/waybar/background.sh focus 1"
-    },
-    "custom/bgapp2": {
-        "exec": "~/.config/waybar/background.sh slot 2",
-        "interval": 3,
-        "return-type": "json",
-        "format": "{text}",
-        "tooltip": true,
-        "on-click": "~/.config/waybar/background.sh focus 2"
-    },
-    "custom/bgapp3": {
-        "exec": "~/.config/waybar/background.sh slot 3",
-        "interval": 3,
-        "return-type": "json",
-        "format": "{text}",
-        "tooltip": true,
-        "on-click": "~/.config/waybar/background.sh focus 3"
-    },
-    "custom/bgapp4": {
-        "exec": "~/.config/waybar/background.sh slot 4",
-        "interval": 3,
-        "return-type": "json",
-        "format": "{text}",
-        "tooltip": true,
-        "on-click": "~/.config/waybar/background.sh focus 4"
-    },
     "tray": {
-        "icon-size": 1,
-        "spacing": 0,
+        "icon-size": 16,
+        "spacing": 6,
         "show-passive-items": true,
-        "tooltip": false
+        "reverse-direction": true,
+        "tooltip": true
     },
     "mpris": {
         "format": "󰎆 {artist} - {title}",
