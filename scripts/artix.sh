@@ -210,14 +210,20 @@ choose_one() {
 }
 
 PKG=""
-sel="$(choose_one "Which browser do you want?" "brave-bin (Recommended)" "ungoogled-chromium" "zen-browser-bin")"
+sel="$(choose_one "Which browser do you want?" "brave-bin (Recommended)" "ungoogled-chromium" "zen-browser-bin" "ladybird (alpha)")"
 case "$sel" in
     1) PKG="brave-bin" ;;
     2) PKG="ungoogled-chromium" ;;
     3) PKG="zen-browser-bin" ;;
+    4) PKG="ladybird" ;;
     *) PKG="" ;;
 esac
-if [ -n "$PKG" ]; then
+if [ "$PKG" = "ladybird" ]; then
+    command -v flatpak >/dev/null 2>&1 || sudo pacman -S --needed --noconfirm flatpak
+    info "Installing Ladybird (alpha) via Flatpak..."
+    flatpak install --user -y https://flatpak.ladybird.org/ladybird.flatpakref \
+        && ok "Ladybird (alpha) installed." || warn "Failed to install Ladybird (alpha)."
+elif [ -n "$PKG" ]; then
     info "Installing $PKG via trizen..."
     aur_install "$PKG" && ok "$PKG installed." || warn "Failed to install $PKG."
 else
